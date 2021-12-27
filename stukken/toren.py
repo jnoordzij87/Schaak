@@ -1,12 +1,12 @@
 from stukken.stuk import Stuk
-from globenums import Richtingen, StukType
-import globvars
+from globale_enums import Richtingen, StukType
+import globale_variabelen
 
 class Toren(Stuk):
     def __init__(self, kleur, veld):
         #geef de stukinformatie door aan de moederclass
         super().__init__(StukType.Toren, kleur, veld)
-        self.Plaatje = globvars.plaatjes[self.StukType][self.Kleur]
+        self.Plaatje = globale_variabelen.plaatjes[self.StukType][self.Kleur]
         self.StelBeweegRichtingenIn()
 
     def StelBeweegRichtingenIn(self):

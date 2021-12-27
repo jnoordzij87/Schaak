@@ -1,4 +1,4 @@
-from globenums import StukType , StukKleur
+from globale_enums import StukType , StukKleur
 
 plaatjesOpzoeker = {}
 

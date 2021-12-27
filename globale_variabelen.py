@@ -1,11 +1,11 @@
 #globale variabelen
 
 import plaatjes.opzoeker
-import globenums
+import globale_enums
 
 velden = {} #dictionary
 stukken = [] #lijst
 geselecteerdeStuk = None
 geselecteerdeStukOpties = None
 plaatjes = plaatjes.opzoeker.plaatjesOpzoeker
-spelerAanZet = globenums.Spelers.Wit
+spelerAanZet = globale_enums.Spelers.Wit

@@ -1,6 +1,6 @@
 from stukken.stuk import Stuk
 from plaatjes.opzoeker import plaatjesOpzoeker
-from globenums import StukKleur, Richtingen, StukType
+from globale_enums import StukKleur, Richtingen, StukType
 
 class Pion(Stuk):
     def __init__(self, kleur, veld):

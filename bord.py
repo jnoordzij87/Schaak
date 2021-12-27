@@ -1,6 +1,6 @@
 import pygame
-import globenums
-import globvars
+import globale_enums
+import globale_variabelen
 from veld import Veld
 from stukken.pion import Pion
 from stukken.loper import Loper
@@ -20,7 +20,7 @@ class Bord:
         vakjesgrootte = schermbreedte / 8
         posX = 0
         posY = schermhoogte - vakjesgrootte
-        beginKleurRij = globenums.vakjeskleuren.wit.value
+        beginKleurRij = globale_enums.vakjeskleuren.wit.value
         for rij in rijen:
             kleur = beginKleurRij
             for kolom in kolommen:
@@ -29,7 +29,7 @@ class Bord:
                 # maak vakje
                 veld = Veld(rij, kolom, posX, posY, kleur, vakjesgrootte, self)
                 veld.Teken(scherm)
-                globvars.velden[coord] = veld # bewaar veld in dictionary zodat deze snel opzoekbaar is, bijv voor bij het stukopties tekenen
+                globale_variabelen.velden[coord] = veld # bewaar veld in dictionary zodat deze snel opzoekbaar is, bijv voor bij het stukopties tekenen
                 posX += vakjesgrootte
                 kleur = self.VeranderKleur(kleur)
             posY -= vakjesgrootte
@@ -44,7 +44,7 @@ class Bord:
         :return:
         """
         for coord in coordinaten:
-            veld = globvars.velden[coord]
+            veld = globale_variabelen.velden[coord]
             #krijg het middelpunt van het veld
             middelpunt = veld.MiddelPunt()
             mpX = middelpunt[0]
@@ -57,13 +57,13 @@ class Bord:
         pass
 
     def VeranderKleur(self, huidigeKleur):
-        if huidigeKleur == globenums.vakjeskleuren.wit.value:
-            return globenums.vakjeskleuren.blauw.value
-        if huidigeKleur == globenums.vakjeskleuren.blauw.value:
-            return globenums.vakjeskleuren.wit.value
+        if huidigeKleur == globale_enums.vakjeskleuren.wit.value:
+            return globale_enums.vakjeskleuren.blauw.value
+        if huidigeKleur == globale_enums.vakjeskleuren.blauw.value:
+            return globale_enums.vakjeskleuren.wit.value
 
     def MaakStartOpstelling(self):
-        for veld in globvars.velden.values():
+        for veld in globale_variabelen.velden.values():
             coord = veld.Coordinaat()
             stuk = None
             """
@@ -81,27 +81,27 @@ class Bord:
             
             """
             if coord == 'A1' or coord == 'H1':
-                stuk = Toren(globenums.StukKleur.Wit, veld)
+                stuk = Toren(globale_enums.StukKleur.Wit, veld)
             if coord == 'A8' or coord == 'H8':
-                stuk = Toren(globenums.StukKleur.Zwart, veld)
+                stuk = Toren(globale_enums.StukKleur.Zwart, veld)
             if coord == 'E1':
-                stuk = Koning(globenums.StukKleur.Wit, veld)
+                stuk = Koning(globale_enums.StukKleur.Wit, veld)
             if coord == 'E8':
-                stuk = Koning(globenums.StukKleur.Zwart, veld)
+                stuk = Koning(globale_enums.StukKleur.Zwart, veld)
             if coord == 'D8':
-                stuk = Dame(globenums.StukKleur.Zwart, veld)
+                stuk = Dame(globale_enums.StukKleur.Zwart, veld)
             if coord == 'D1':
-                stuk = Dame(globenums.StukKleur.Wit, veld)
+                stuk = Dame(globale_enums.StukKleur.Wit, veld)
             if coord == 'C1' or coord == 'F1':
-                stuk = Loper(globenums.StukKleur.Wit, veld)
+                stuk = Loper(globale_enums.StukKleur.Wit, veld)
             if coord == 'C8' or coord == 'F8':
-                stuk = Loper(globenums.StukKleur.Zwart, veld)
+                stuk = Loper(globale_enums.StukKleur.Zwart, veld)
             if '2' in coord:
-                stuk = Pion(globenums.StukKleur.Wit, veld)
+                stuk = Pion(globale_enums.StukKleur.Wit, veld)
             if '7' in coord:
-                stuk = Pion(globenums.StukKleur.Zwart, veld)
+                stuk = Pion(globale_enums.StukKleur.Zwart, veld)
 
             #voeg het stuk toe aan de stukkenlijst
             if stuk != None:
-                globvars.stukken.append(stuk)
+                globale_variabelen.stukken.append(stuk)
                 veld.Stuk = stuk

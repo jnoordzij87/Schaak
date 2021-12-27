@@ -1,6 +1,6 @@
 import pygame
-import globenums
-import globvars
+import globale_enums
+import globale_variabelen
 from bord import Bord
 import hulpfuncties
 
@@ -30,13 +30,13 @@ while blijfDraaien == True:
 
 
     #teken opnieuw alle elementen op het schaakbord
-    for veld in globvars.velden.values():
+    for veld in globale_variabelen.velden.values():
         #teken het vakje
         veld.Teken(scherm)
 
         #teken het coordinaat
         font = pygame.font.Font('freesansbold.ttf', 16)
-        text = font.render(veld.Kolom + veld.Rij, True, globenums.vakjeskleuren.groen.value)
+        text = font.render(veld.Kolom + veld.Rij, True, globale_enums.vakjeskleuren.groen.value)
         scherm.blit(text, (veld.PosX,veld.PosY))
 
         #teken de plaatjes van de stukken
@@ -46,8 +46,8 @@ while blijfDraaien == True:
             scherm.blit(stukplaatje, (veld.PosX, veld.PosY))
 
     #teken als laatst de stukopties
-    if globvars.geselecteerdeStukOpties != None:
-        bord.TekenStukOpties(globvars.geselecteerdeStukOpties, scherm)
+    if globale_variabelen.geselecteerdeStukOpties != None:
+        bord.TekenStukOpties(globale_variabelen.geselecteerdeStukOpties, scherm)
 
     #update het scherm
     pygame.display.flip()

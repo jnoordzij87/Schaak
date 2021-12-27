@@ -1,5 +1,5 @@
 import pygame
-import globvars
+import globale_variabelen
 import hulpfuncties
 
 
@@ -31,7 +31,7 @@ class Veld:
     def Selecteer(self):
         #deselecteer eerst alle andere velden
         #dit zorgt ervoor dat de groene kleur bij het vorige geselecteerde vakje verdwijnt
-        for veld in globvars.velden.values():
+        for veld in globale_variabelen.velden.values():
             veld.DeSelecteer()
         #selecteer nu dit veld
         self.IsGeselecteerd = True

@@ -1,7 +1,7 @@
 import random
 
-import globenums
-import globvars
+import globale_enums
+import globale_variabelen
 
 def BehandelStukGeselecteerd(stuk):
     #maak onderscheid tussen een gewone selectie actie en een pakactie
@@ -10,7 +10,7 @@ def BehandelStukGeselecteerd(stuk):
     #2) en het huidige geselecteerde stuk is van een andere kleur als het vorige,
     #3) en het huidige geselecteerde stuk staat op een veld dat gezien wordt door het vorige,
     #dan wil de gebruiker het huidige geselecteerde stuk pakken.
-    vorige_geselecteerde_stuk = globvars.geselecteerdeStuk
+    vorige_geselecteerde_stuk = globale_variabelen.geselecteerdeStuk
     nieuwe_geselecteerde_stuk = stuk
     #check 1) kijk of er een stuk geselecteerd was
     if vorige_geselecteerde_stuk == None:
@@ -22,7 +22,7 @@ def BehandelStukGeselecteerd(stuk):
         is_andere_kleur = vorige_geselecteerde_stuk.Kleur != nieuwe_geselecteerde_stuk.Kleur
         # check 3) kijk of het huidige geselecteerde stuk wordt 'gezien' door vorige stuk
         nieuwe_geselecteerde_stuk_veld = nieuwe_geselecteerde_stuk.HuidigVeld.Coordinaat()
-        vorige_geselecteerde_stuk_opties = globvars.geselecteerdeStukOpties
+        vorige_geselecteerde_stuk_opties = globale_variabelen.geselecteerdeStukOpties
         ziet_vorig_stuk_nieuw_stuk = nieuwe_geselecteerde_stuk_veld in vorige_geselecteerde_stuk_opties #dit kijkt of waarde in lijst voorkomt
         # combineer (2) en (3) om te kijken of het om een pak-actie gaat
         kan_vorig_stuk_nieuw_stuk_pakken = ziet_vorig_stuk_nieuw_stuk and is_andere_kleur #alleen waar als allebei waar is
@@ -38,25 +38,25 @@ def SelecteerStuk(stuk):
     if IsStukVanSpelerAanZet(stuk):
         #selectie toegestaan
         #wijs het stuk aan als het geselecteerde stuk
-        globvars.geselecteerdeStuk = stuk
-        globvars.geselecteerdeStukOpties = stuk.KrijgVeldenWaarStukNaarToeKan()
+        globale_variabelen.geselecteerdeStuk = stuk
+        globale_variabelen.geselecteerdeStukOpties = stuk.KrijgVeldenWaarStukNaarToeKan()
     else:
         #we mogen dit stuk niet selecteren. Behandel als deselectie-actie
         DeSelecteer()
 
 def DeSelecteer():
-    globvars.geselecteerdeStuk = None
-    globvars.geselecteerdeStukOpties = None
+    globale_variabelen.geselecteerdeStuk = None
+    globale_variabelen.geselecteerdeStukOpties = None
 
 def WasErEenStukGeselecteerd():
-    return globvars.geselecteerdeStuk != None
+    return globale_variabelen.geselecteerdeStuk != None
 
 def StaatErEenStukOpVeld(coordinaat):
     stuk = KrijgStukOpVeld(coordinaat)
     return stuk != None
 
 def KrijgStukOpVeld(coordinaat):
-    for stuk in globvars.stukken:
+    for stuk in globale_variabelen.stukken:
         if stuk.HuidigVeld.Coordinaat() == coordinaat:
             return stuk
     #als we alle stukken hebben bekeken en geen gevonden, dan staat er geen stuk op dit veld
@@ -73,7 +73,7 @@ def KanStukNaarVeld(stuk, veld):
 
 def PakStukOpVeld(pakkendestuk, gepaktestuk):
     # Verwijder het gepaktestuk van de lijst met actieve stukken
-    globvars.stukken.remove(gepaktestuk)
+    globale_variabelen.stukken.remove(gepaktestuk)
     #Verplaats het pakkende stuk naar het nieuwe veld
     Verplaats(pakkendestuk, gepaktestuk.HuidigVeld)
 
@@ -84,7 +84,7 @@ def Verplaats(stuk, veld):
         #ERROR. het type van de veld-parameter is verkeerd. Het is geen veldobject maar een coordinaat
         #haal eerst het veldobject op o.b.v. het coordinaat
         coord = veld
-        veld = globvars.velden[coord]
+        veld = globale_variabelen.velden[coord]
         #veld is nu een veldobject. we kunnen verder
 
     # zeg tegen het veld waar het stuk op stond dat er nu geen stuk meer op staat
@@ -96,16 +96,16 @@ def Verplaats(stuk, veld):
 
     # reset de globale variabelen:
     # na het verplaatsen van een stuk is er geen stuk meer geselecteerd
-    globvars.geselecteerdeStuk = None
+    globale_variabelen.geselecteerdeStuk = None
     # reset de stukopties
-    globvars.geselecteerdeStukOpties = None
+    globale_variabelen.geselecteerdeStukOpties = None
 
     # na het verplaatsen van een stuk is de andere speler aan de beurt
     VeranderSpelerAanZet()
 
 def KrijgStukkenVanSpeler(speler):
     stukkenVanSpeler = [] #start lege lijst
-    for stuk in globvars.stukken:
+    for stuk in globale_variabelen.stukken:
         if stuk.VanWelkeSpelerIsDitStuk() == speler:
             stukkenVanSpeler.append(stuk)
     return stukkenVanSpeler
@@ -138,21 +138,21 @@ def DoeEenWillekeurigeZet(speler):
         Verplaats(stuk, gekozenVeld)
 
 def BehandelSpelerAanZetVeranderd():
-    huidigeSpeler = globvars.spelerAanZet
-    if huidigeSpeler == globenums.Spelers.Zwart:
+    huidigeSpeler = globale_variabelen.spelerAanZet
+    if huidigeSpeler == globale_enums.Spelers.Zwart:
         DoeEenWillekeurigeZet(huidigeSpeler)
 
 def VeranderSpelerAanZet():
-    huidigeSpeler = globvars.spelerAanZet
-    if huidigeSpeler == globenums.Spelers.Wit:
-        globvars.spelerAanZet = globenums.Spelers.Zwart
-    if huidigeSpeler == globenums.Spelers.Zwart:
-        globvars.spelerAanZet = globenums.Spelers.Wit
+    huidigeSpeler = globale_variabelen.spelerAanZet
+    if huidigeSpeler == globale_enums.Spelers.Wit:
+        globale_variabelen.spelerAanZet = globale_enums.Spelers.Zwart
+    if huidigeSpeler == globale_enums.Spelers.Zwart:
+        globale_variabelen.spelerAanZet = globale_enums.Spelers.Wit
     BehandelSpelerAanZetVeranderd()
 
 def IsStukVanSpelerAanZet(stuk):
     eigenaarVanStuk = stuk.VanWelkeSpelerIsDitStuk()
-    spelerAanZet = globvars.spelerAanZet
+    spelerAanZet = globale_variabelen.spelerAanZet
     return eigenaarVanStuk == spelerAanZet
 
 def BehandelVeldGeselecteerd(veld):
@@ -166,7 +166,7 @@ def BehandelVeldGeselecteerd(veld):
         if WasErEenStukGeselecteerd():
             #er was een stuk geselecteerd toen het lege veld werd aangeklikt
             #kijk of het stuk naar het aangeklikte veld verplaatst kan worden
-            geselecteerdeStuk = globvars.geselecteerdeStuk
+            geselecteerdeStuk = globale_variabelen.geselecteerdeStuk
             if KanStukNaarVeld(geselecteerdeStuk, veld):
                 # ja! het stuk kan naar het aangeklikte veld. verplaats het stuk!
                 Verplaats(geselecteerdeStuk, veld)
@@ -182,10 +182,10 @@ def BehandelKlikGebeurtenis(event):
     #kijk waar op het scherm er is geklikt
     klikX, klikY = event.pos
     #vind uit welk veld is aangeklikt
-    for veld in globvars.velden.values():
+    for veld in globale_variabelen.velden.values():
         if veld.VormObject.collidepoint(klikX, klikY):
             # geselecteerde veld gevonden!
             BehandelVeldGeselecteerd(veld)
 
 def KrijgVeldObjectOpBasisVanCoordinaat(coordinaat):
-    return globvars.velden[coordinaat]
+    return globale_variabelen.velden[coordinaat]

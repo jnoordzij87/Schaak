@@ -1,8 +1,8 @@
 from enum import Enum
 
-import globenums
+import globale_enums
 import hulpfuncties
-from globenums import Richtingen
+from globale_enums import Richtingen
 
 class Stuk:
     def __init__(self, stuktype, stukkleur, veld):
@@ -12,10 +12,10 @@ class Stuk:
         self.HeeftAlEensBewogen = False
 
     def VanWelkeSpelerIsDitStuk(self):
-        if self.Kleur == globenums.StukKleur.Wit:
-            return globenums.Spelers.Wit
-        if self.Kleur == globenums.StukKleur.Zwart:
-            return globenums.Spelers.Zwart
+        if self.Kleur == globale_enums.StukKleur.Wit:
+            return globale_enums.Spelers.Wit
+        if self.Kleur == globale_enums.StukKleur.Zwart:
+            return globale_enums.Spelers.Zwart
 
     def ZetNieuwVeld(self, veld):
         self.HuidigVeld = veld
