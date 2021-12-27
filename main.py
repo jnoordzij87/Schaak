@@ -3,6 +3,7 @@ import globale_enums
 import globale_variabelen
 from bord import Bord
 import hulpfuncties
+from startpositie import StartPositie
 
 pygame.init()
 
@@ -12,9 +13,15 @@ schermhoogte = 400
 scherm = pygame.display.set_mode((schermbreedte, schermhoogte))
 pygame.display.set_caption('Schaak')
 
+#maak het bord
 bord = Bord()
-bord.MaakBord(scherm, schermbreedte, schermhoogte)
-bord.MaakStartOpstelling()
+#maak startpositie en stel in als huidige positie
+globale_variabelen.huidige_positie = StartPositie(bord)
+
+#teken de velden van het bord op het scherm
+bord.teken_velden(scherm, schermbreedte, schermhoogte)
+#teken de stukken in de startpositie op het scherm
+globale_variabelen.huidige_positie.teken_positie()
 
 #hier gaan we de game-loop in
 blijfDraaien = True
@@ -23,7 +30,7 @@ while blijfDraaien == True:
     #kijk elke keer of er een speciale gebeurtenis heeft plaatsgevonden
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            #afsluitgebeurtenis
+            #als we hier zijn is er op het kruisje geklikt
             blijfDraaien = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             hulpfuncties.BehandelKlikGebeurtenis(event)

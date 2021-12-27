@@ -6,7 +6,7 @@ class Koning(Stuk):
     def __init__(self, kleur, veld):
         #geef de stukinformatie door aan de moederclass
         super().__init__(StukType.Koning, kleur, veld)
-        self.Plaatje = globale_variabelen.plaatjes[self.StukType][self.Kleur]
+        self.Plaatje = globale_variabelen.plaatjes[self.stuktype][self.kleur]
         self.StelBeweegRichtingenIn()
 
     def StelBeweegRichtingenIn(self):

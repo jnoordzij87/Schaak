@@ -3,6 +3,7 @@
 import plaatjes.opzoeker
 import globale_enums
 
+huidige_positie = None
 velden = {} #dictionary
 stukken = [] #lijst
 geselecteerdeStuk = None

@@ -19,7 +19,7 @@ def BehandelStukGeselecteerd(stuk):
     else:
         #er was een vorig stuk geselecteerd. kijk of het gaat om een pakaktie
         #check 2) kijk of stuk van andere kleur is
-        is_andere_kleur = vorige_geselecteerde_stuk.Kleur != nieuwe_geselecteerde_stuk.Kleur
+        is_andere_kleur = vorige_geselecteerde_stuk.kleur != nieuwe_geselecteerde_stuk.kleur
         # check 3) kijk of het huidige geselecteerde stuk wordt 'gezien' door vorige stuk
         nieuwe_geselecteerde_stuk_veld = nieuwe_geselecteerde_stuk.HuidigVeld.Coordinaat()
         vorige_geselecteerde_stuk_opties = globale_variabelen.geselecteerdeStukOpties
@@ -182,8 +182,8 @@ def BehandelKlikGebeurtenis(event):
     #kijk waar op het scherm er is geklikt
     klikX, klikY = event.pos
     #vind uit welk veld is aangeklikt
-    for veld in globale_variabelen.velden.values():
-        if veld.VormObject.collidepoint(klikX, klikY):
+    for veld in globale_variabelen.huidige_positie.bord.getekende_velden:
+        if veld.vorm.collidepoint(klikX, klikY):
             # geselecteerde veld gevonden!
             BehandelVeldGeselecteerd(veld)
 

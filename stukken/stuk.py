@@ -6,21 +6,21 @@ from globale_enums import Richtingen
 
 class Stuk:
     def __init__(self, stuktype, stukkleur, veld):
-        self.StukType = stuktype
+        self.stuktype = stuktype
         self.HuidigVeld = veld
-        self.Kleur = stukkleur
-        self.HeeftAlEensBewogen = False
+        self.kleur = stukkleur
+        self.heeft_al_eens_bewogen = False
 
     def VanWelkeSpelerIsDitStuk(self):
-        if self.Kleur == globale_enums.StukKleur.Wit:
+        if self.kleur == globale_enums.StukKleur.Wit:
             return globale_enums.Spelers.Wit
-        if self.Kleur == globale_enums.StukKleur.Zwart:
+        if self.kleur == globale_enums.StukKleur.Zwart:
             return globale_enums.Spelers.Zwart
 
     def ZetNieuwVeld(self, veld):
         self.HuidigVeld = veld
         self.HuidigCoordinaat = veld.Coordinaat()
-        self.HeeftAlEensBewogen = True
+        self.heeft_al_eens_bewogen = True
 
     def KrijgVeldenWaarStukNaarToeKan(self):
         #overschrijf deze functie in de ervende class!
@@ -53,7 +53,7 @@ class Stuk:
         if hulpfuncties.StaatErEenStukOpVeld(coordinaat):
             #er staat een stuk op het veld, kijk of het van dezelfde kleur is
             stukopveld = hulpfuncties.KrijgStukOpVeld(coordinaat)
-            if stukopveld.Kleur == self.Kleur:
+            if stukopveld.kleur == self.kleur:
                 #het stuk heeft dezelfde kleur
                 return True
         else:
@@ -64,7 +64,7 @@ class Stuk:
         if hulpfuncties.StaatErEenStukOpVeld(coordinaat):
             #er staat een stuk op het veld, kijk of het van dezelfde kleur is
             stukopveld = hulpfuncties.KrijgStukOpVeld(coordinaat)
-            if stukopveld.Kleur == self.Kleur:
+            if stukopveld.kleur == self.kleur:
                 #het stuk heeft dezelfde kleur
                 return False
             else:
@@ -106,7 +106,7 @@ class Stuk:
         if hulpfuncties.StaatErEenStukOpVeld(eerstvolgendevakje):
             #er staat een stuk op het veld, kijk of het van dezelfde kleur is
             stukopvakje = hulpfuncties.KrijgStukOpVeld(eerstvolgendevakje)
-            if stukopvakje.Kleur == self.Kleur:
+            if stukopvakje.kleur == self.kleur:
                 #het stuk heeft dezelfde kleur, het veld is niet beschikbaar
                 return None
         #als we hier zijn is het vakje geldig, geef terug
