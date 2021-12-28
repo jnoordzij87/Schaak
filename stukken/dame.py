@@ -1,5 +1,5 @@
 from stukken.stuk import Stuk
-from globale_enums import Richtingen, StukType
+from globale_enums import Lineaire_Richtingen, StukType
 import globale_variabelen
 
 class Dame(Stuk):
@@ -10,17 +10,19 @@ class Dame(Stuk):
         self.StelBeweegRichtingenIn()
 
     def StelBeweegRichtingenIn(self):
-        self.BeweegRichtingen = [Richtingen.RechtsOnder,
-                                 Richtingen.RechtsBoven,
-                                 Richtingen.LinksBoven,
-                                 Richtingen.LinksOnder,
-                                 Richtingen.Boven,
-                                 Richtingen.Onder,
-                                 Richtingen.Links,
-                                 Richtingen.Rechts]
+        self.BeweegRichtingen = [Lineaire_Richtingen.RechtsOnder,
+                                 Lineaire_Richtingen.RechtsBoven,
+                                 Lineaire_Richtingen.LinksBoven,
+                                 Lineaire_Richtingen.LinksOnder,
+                                 Lineaire_Richtingen.Boven,
+                                 Lineaire_Richtingen.Onder,
+                                 Lineaire_Richtingen.Links,
+                                 Lineaire_Richtingen.Rechts]
 
-    def KrijgVeldenWaarStukNaarToeKan(self):
+    def krijg_veldopties(self):
         resultaat = []
         for beweegrichting in self.BeweegRichtingen:
-            resultaat.extend(self.AlleVakjesInRichting(self.HuidigVeld.Coordinaat(), beweegrichting))
+            huidige_veld = globale_variabelen.huidige_positie.krijg_veld_van_stuk() #mag dit niet in class?
+            beschikbare_velden = self.krijg_veldopties_in_richting(self.HuidigVeld.Coordinaat(), beweegrichting)
+            resultaat.extend()
         return resultaat

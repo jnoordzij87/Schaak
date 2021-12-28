@@ -8,8 +8,8 @@ class vakjeskleuren(Enum):
     rood = (255, 0, 0)
 
 class Spelers(Enum):
-    Wit = 1
-    Zwart = 2
+    wit = 1
+    zwart = 2
 
 class StukKleur(Enum):
     Wit = 1
@@ -23,7 +23,12 @@ class StukType(Enum):
     Paard = 5
     Pion = 6
 
-class Richtingen(Enum):
+class StukBewegingsTypen(Enum):
+    Lineair = 1
+    Paard = 2
+    Pion = 3
+
+class Lineaire_Richtingen(Enum):
     Boven = 1
     Onder = 2
     Rechts = 3

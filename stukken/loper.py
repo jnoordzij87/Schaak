@@ -1,5 +1,5 @@
 from stukken.stuk import Stuk
-from globale_enums import Richtingen, StukType
+from globale_enums import Lineaire_Richtingen, StukType
 import globale_variabelen
 
 class Loper(Stuk):
@@ -10,13 +10,13 @@ class Loper(Stuk):
         self.StelBeweegRichtingenIn()
 
     def StelBeweegRichtingenIn(self):
-        self.BeweegRichtingen = [Richtingen.RechtsOnder,
-                                 Richtingen.RechtsBoven,
-                                 Richtingen.LinksBoven,
-                                 Richtingen.LinksOnder]
+        self.BeweegRichtingen = [Lineaire_Richtingen.RechtsOnder,
+                                 Lineaire_Richtingen.RechtsBoven,
+                                 Lineaire_Richtingen.LinksBoven,
+                                 Lineaire_Richtingen.LinksOnder]
 
-    def KrijgVeldenWaarStukNaarToeKan(self):
+    def krijg_veldopties(self, veldbezetting : dict(str, Stuk)):
         resultaat = []
         for beweegrichting in self.BeweegRichtingen:
-            resultaat.extend(self.AlleVakjesInRichting(self.HuidigVeld.Coordinaat(), beweegrichting))
+            resultaat.extend(self.krijg_veldopties_in_richting(self.HuidigVeld.Coordinaat(), beweegrichting))
         return resultaat

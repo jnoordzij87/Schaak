@@ -1,5 +1,5 @@
 from stukken.stuk import Stuk
-from globale_enums import Richtingen, StukType
+from globale_enums import Lineaire_Richtingen, StukType
 import globale_variabelen
 
 class Toren(Stuk):
@@ -10,13 +10,13 @@ class Toren(Stuk):
         self.StelBeweegRichtingenIn()
 
     def StelBeweegRichtingenIn(self):
-        self.BeweegRichtingen = [Richtingen.Boven,
-                                 Richtingen.Onder,
-                                 Richtingen.Links,
-                                 Richtingen.Rechts]
+        self.BeweegRichtingen = [Lineaire_Richtingen.Boven,
+                                 Lineaire_Richtingen.Onder,
+                                 Lineaire_Richtingen.Links,
+                                 Lineaire_Richtingen.Rechts]
 
-    def KrijgVeldenWaarStukNaarToeKan(self):
+    def krijg_veldopties(self):
         resultaat = []
         for beweegrichting in self.BeweegRichtingen:
-            resultaat.extend(self.AlleVakjesInRichting(self.HuidigVeld.Coordinaat(), beweegrichting))
+            resultaat.extend(self.krijg_veldopties_in_richting(self.HuidigVeld.Coordinaat(), beweegrichting))
         return resultaat

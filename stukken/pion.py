@@ -1,6 +1,6 @@
 from stukken.stuk import Stuk
 from plaatjes.opzoeker import plaatjesOpzoeker
-from globale_enums import StukKleur, Richtingen, StukType
+from globale_enums import StukKleur, Lineaire_Richtingen, StukType
 
 class Pion(Stuk):
     def __init__(self, kleur, veld):
@@ -12,15 +12,15 @@ class Pion(Stuk):
     def StelBeweegRichtingenIn(self):
         # stel in welke richting de pion op kan lopen
         if self.kleur == StukKleur.Wit:
-            self.BeweegRichtingen = [Richtingen.Boven]  # afspraak: een witte pion loopt omhoog
+            self.BeweegRichtingen = [Lineaire_Richtingen.Boven]  # afspraak: een witte pion loopt omhoog
         if self.kleur == StukKleur.Zwart:
-            self.BeweegRichtingen = [Richtingen.Onder]  # afspraak: een zwarte pion loopt omlaag
+            self.BeweegRichtingen = [Lineaire_Richtingen.Onder]  # afspraak: een zwarte pion loopt omlaag
 
-    def KrijgVeldenWaarStukNaarToeKan(self):
+    def krijg_veldopties(self):
         resultaat = []
         for beweegrichting in self.BeweegRichtingen:
             if not self.heeft_al_eens_bewogen:
-                resultaat = self.AlleVakjesInRichting(self.HuidigVeld.Coordinaat(), beweegrichting, maxaantal=2)
+                resultaat = self.krijg_veldopties_in_richting(self.HuidigVeld.Coordinaat(), beweegrichting, maxaantal=2)
             else:
-                resultaat = self.AlleVakjesInRichting(self.HuidigVeld.Coordinaat(), beweegrichting, maxaantal=1)
+                resultaat = self.krijg_veldopties_in_richting(self.HuidigVeld.Coordinaat(), beweegrichting, maxaantal=1)
         return resultaat

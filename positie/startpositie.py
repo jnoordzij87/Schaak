@@ -1,5 +1,5 @@
 from positie import Positie
-from bord import Bord
+from bord.bord import Bord
 import globale_enums
 from stukken.pion import Pion
 from stukken.loper import Loper
@@ -39,5 +39,7 @@ class StartPositie(Positie):
 
             #voeg het stuk toe aan de stukkenlijst
             if stuk != None:
-                self.stukken_in_het_spel.append(stuk)
+                self.actieve_stukken.append(stuk)
                 self.veldbezetting[coord] = stuk
+
+            self.speler_aan_zet = globale_enums.Spelers.wit
