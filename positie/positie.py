@@ -13,7 +13,7 @@ class Positie:
     -toegang tot verzameling van alle actieve stukken
     -voor elk veld: weten welk stuk er op staat
     -voor elk stuk: weten op welk veld het staat
-    -verkrijgen van stuk bewegingsmogelijkheden
+    -verkrijgen van stuk bewegingsmogelijkheden -> verplaatst naar beweging
     -stukken en velden beoog ik hiermee onafhankelijk van elkaar te maken
     -wie is er aan zet
     -evaluatie of een positie geldig is of niet (mag een zet uitgevoerd worden)
@@ -45,6 +45,28 @@ class Positie:
     def speler_aan_zet(self):
         return self._speler_aan_zet
 
+    def pak_op_veld(self, pakkendestuk : Stuk, veld : str):
+        gepakte_stuk = self.krijg_stuk_op_veld(veld)
+        self.pak_stuk(pakkendestuk, gepakte_stuk)
+
+    def pak_stuk(self, pakkendestuk : Stuk, gepaktestuk : Stuk):
+        # Verwijder het gepaktestuk van de lijst met actieve stukken
+        self.actieve_stukken.remove(gepaktestuk)
+        # Verplaats het pakkende stuk naar het nieuwe veld
+        pakkend_stuk_huidig_veld = self.krijg_veld_van_stuk(pakkendestuk)
+        pakkend_stuk_nieuw_veld = self.krijg_veld_van_stuk(gepaktestuk)
+        self.verplaats_stuk(pakkendestuk, pakkend_stuk_huidig_veld, pakkend_stuk_nieuw_veld)
+
+    def verplaats_stuk(self, stuk : Stuk, oudeveld : str, nieuweveld : str):
+        #update veldbezetting
+        self.veldbezetting[oudeveld] = None
+        self.veldbezetting[nieuweveld] = stuk
+        #reset globale variabelen:
+        globale_variabelen.geselecteerdeStuk = None
+        globale_variabelen.geselecteerdeStukOpties = None
+        #na het verplaatsen van een stuk is de andere speler aan de beurt
+        self.verander_speler_aan_zet()
+
     def krijg_alle_stukken_van_speler(self, speler : Spelers):
         stukkenVanSpeler = []  #start lege lijst
         for stuk in self.actieve_stukken:
@@ -59,92 +81,6 @@ class Positie:
                 stuk,beweegrichting)
             resultaat.extend(beschikbare_velden_in_richting)
         return resultaat
-
-    def krijg_veldopties_voor_stuk_in_richting(self, stuk : Stuk, richting : Lineaire_Richtingen, maxaantal = None):
-        """
-        :return: een lijst met coordinaten in 1 richting, bijv ['E4', 'F4', 'G4', etc]
-        """
-        #aanpak: zolang we geen ongeldig vakje tegenkomen, bijv omdat we op rand van bord zijn gekomen
-        #ga dan steeds door naar het volgende vakje in dezelfde richting
-        resultaat = []
-        teller = 0
-        stuk_coord = self.krijg_veld_van_stuk(stuk)
-        eerstvolgende_vakje = self.krijg_eerstvolgende_vakje_in_richting(stuk, stuk_coord, richting)
-        is_geldige_optie = self._is_veld_geldige_optie_voor_stuk(stuk, eerstvolgende_vakje)
-        while is_geldige_optie and teller != maxaantal: #stop als dit niet waar is
-            #als we hier zijn is het volgende vakje geldig, voeg toe aan lijst
-            resultaat.append(eerstvolgende_vakje)
-            #als er een stuk van een andere kleur op het zojuist toegevoegde vakje staat, dan is dit het laatste vakje in deze richting, check
-            if self._staat_er_een_stuk_van_andere_kleur_op_veld(stuk, eerstvolgende_vakje):
-                break  #stap uit de loop
-            #als we hier zijn, kijk naar het volgende vakje, en ga door
-            eerstvolgende_vakje = self.krijg_eerstvolgende_vakje_in_richting(eerstvolgende_vakje, richting)
-            is_geldige_optie = self._is_veld_geldige_optie_voor_stuk(stuk, eerstvolgende_vakje)
-            teller += 1
-        #als uit loop: geef resultaat terug
-        return resultaat
-
-    def _is_veld_geldige_optie_voor_stuk(self, stuk, coordinaat):
-        bezet_door_eigen_stuk = self._staat_er_een_stuk_van_zelfde_kleur_op_veld(stuk, coordinaat)
-        return coordinaat != None and not bezet_door_eigen_stuk
-
-    def _staat_er_een_stuk_van_andere_kleur_op_veld(self, stuk, veld):
-        staat_stuk_op_veld = self.staat_er_een_stuk_op_dit_veld(veld)
-        if not staat_stuk_op_veld:
-            return False
-        else:
-            stuk_op_veld = self.krijg_stuk_op_veld(veld)
-            andere_kleur = stuk_op_veld.kleur != stuk.kleur
-            return andere_kleur
-
-    def _staat_er_een_stuk_van_zelfde_kleur_op_veld(self, stuk, veld):
-        staat_stuk_op_veld = self.staat_er_een_stuk_op_dit_veld(veld)
-        if not staat_stuk_op_veld:
-            return False
-        else:
-            stuk_op_veld = self.krijg_stuk_op_veld(veld)
-            zelfde_kleur = stuk_op_veld.kleur == stuk.kleur
-            return zelfde_kleur
-
-    def krijg_eerstvolgende_vakje_in_richting(self, stuk, coordinaat, richting):
-        kolom = coordinaat[0]
-        rij = int(coordinaat[1])
-        if richting == Lineaire_Richtingen.Links:
-            kolom = self.bord.KolomLinks(kolom)
-        if richting == Lineaire_Richtingen.Rechts:
-            kolom = self.bord.KolomRechts(kolom)
-        if richting == Lineaire_Richtingen.Boven:
-            rij = self.bord.RijOmhoog(rij)
-        if richting == Lineaire_Richtingen.Onder:
-            rij = self.bord.RijOmlaag(rij)
-        if richting == Lineaire_Richtingen.LinksBoven:
-            kolom = self.bord.KolomLinks(kolom)
-            rij = self.bord.RijOmhoog(rij)
-        if richting == Lineaire_Richtingen.LinksOnder:
-            kolom = self.bord.KolomLinks(kolom)
-            rij = self.bord.RijOmlaag(rij)
-        if richting == Lineaire_Richtingen.RechtsBoven:
-            kolom = self.bord.KolomRechts(kolom)
-            rij = self.bord.RijOmhoog(rij)
-        if richting == Lineaire_Richtingen.RechtsOnder:
-            kolom = self.bord.KolomRechts(kolom)
-            rij = self.bord.RijOmlaag(rij)
-        # als volgende veld ongeldig is: geef niks terug
-        if kolom == None or rij == None:
-            return None
-        #als we hier zijn hebben we een geldige coordinaat
-        eerstvolgendevakje = kolom + str(rij)
-        return eerstvolgendevakje
-
-
-    def kan_stuk_naar_veld(self, stuk : Stuk, veld : str):
-        # kijk of het aangeklikte veld tot de beweegopties van het stuk behoort
-        # als in: zit de coordinaat van het veld in de lijst met beweegopties van het stuk?
-        stukopties = stuk.krijg_veldopties()
-        veldcoordinaat = veld.Coordinaat()
-        zitVeldInStukOpties = veldcoordinaat in stukopties
-        # geef het antwoord terug
-        return zitVeldInStukOpties
 
     def krijg_stuk_op_veld(self, veld : str) -> Stuk:
         """
@@ -190,28 +126,6 @@ class Positie:
             coord = veld.coordinaat
             veldbezetting[coord] = None
         return veldbezetting
-        l
-    def pak_op_veld(self, pakkendestuk : Stuk, veld : str):
-        gepakte_stuk = self.krijg_stuk_op_veld(veld)
-        self.pak_stuk(pakkendestuk, gepakte_stuk)
-
-    def pak_stuk(self, pakkendestuk : Stuk, gepaktestuk : Stuk):
-        # Verwijder het gepaktestuk van de lijst met actieve stukken
-        self.actieve_stukken.remove(gepaktestuk)
-        # Verplaats het pakkende stuk naar het nieuwe veld
-        pakkend_stuk_huidig_veld = self.krijg_veld_van_stuk(pakkendestuk)
-        pakkend_stuk_nieuw_veld = self.krijg_veld_van_stuk(gepaktestuk)
-        self.verplaats_stuk(pakkendestuk, pakkend_stuk_huidig_veld, pakkend_stuk_nieuw_veld)
-
-    def verplaats_stuk(self, stuk : Stuk, oudeveld : str, nieuweveld : str):
-        #update veldbezetting
-        self.veldbezetting[oudeveld] = None
-        self.veldbezetting[nieuweveld] = stuk
-        #reset globale variabelen:
-        globale_variabelen.geselecteerdeStuk = None
-        globale_variabelen.geselecteerdeStukOpties = None
-        #na het verplaatsen van een stuk is de andere speler aan de beurt
-        self.verander_speler_aan_zet()
 
     def verander_speler_aan_zet(self):
         huidigeSpeler = self.speler_aan_zet

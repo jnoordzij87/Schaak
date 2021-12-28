@@ -1,13 +1,7 @@
 import pygame
 import globale_enums
-import globale_variabelen
 from veld.getekendveld import GetekendVeld
 from veld.veldbasis import VeldBasis
-from stukken.pion import Pion
-from stukken.loper import Loper
-from stukken.dame import Dame
-from stukken.koning import Koning
-from stukken.toren import Toren
 
 
 class Bord:

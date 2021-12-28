@@ -54,7 +54,7 @@ while blijfDraaien == True:
 
         #teken de plaatjes van de stukken
         if veld.Stuk != None:
-            stukplaatje = pygame.image.load(veld.Stuk.Plaatje)
+            stukplaatje = pygame.image.load(veld.Stuk._plaatje)
             stukplaatje = pygame.transform.scale(stukplaatje, (stukplaatje.get_width() * 0.8, stukplaatje.get_height() * 0.8))
             scherm.blit(stukplaatje, (veld.PosX, veld.PosY))
 
