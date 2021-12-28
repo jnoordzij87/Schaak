@@ -1,17 +1,25 @@
+import globale_enums
 from veld.veldbasis import VeldBasis
 import pygame
 
 class GetekendVeld(VeldBasis):
     """Een veld dat op het scherm getekend kan worden"""
-    def __init__(self, scherm, schermpositie_x, schermpositie_y, vakjesgrootte, kleur):
-        self._vorm
+    def __init__(self, scherm, schermpositie_x, schermpositie_y, vakjesgrootte, coordinaat, kleur):
+        super().__init__(coordinaat, kleur)
+        self._vorm = None
         self._schermpositie_x = schermpositie_x
         self._schermpositie_y = schermpositie_y
         self._vakgrootte = vakjesgrootte
-        self._vorm = self._teken_veld(scherm, schermpositie_x, schermpositie_y, vakjesgrootte, vakjesgrootte, kleur)
+        self._rgb_kleur = self._converteer_naar_rgb_kleur(kleur)
+        self._vorm = self._teken_veld(scherm)
 
-    def _teken_veld(self, scherm, positie_x, positie_y, breedte, hoogte, kleur):
-        return pygame.draw.rect(scherm, kleur, (positie_x, positie_y, breedte, hoogte))
+
+    def _teken_veld(self, scherm):
+        posX = self._schermpositie_x
+        posY = self._schermpositie_y
+        grootte = self._vakgrootte
+        kleur = self.rgb_kleur
+        return pygame.draw.rect(scherm, kleur, (posX, posY, grootte, grootte))
 
     @property
     def vorm(self):
@@ -28,4 +36,15 @@ class GetekendVeld(VeldBasis):
     @property
     def middelpunt(self):
         x = self.schermpositie_x + self._vakgrootte / 2
-        x = self.schermpositie_y + self._vakgrootte / 2
+        y = self.schermpositie_y + self._vakgrootte / 2
+        return [x,y]
+
+    @property
+    def rgb_kleur(self):
+        return self._rgb_kleur
+
+    def _converteer_naar_rgb_kleur(self, kleur):
+        if kleur == globale_enums.veld_kleuren.wit:
+            return globale_enums.veld_rgb_kleuren.wit.value
+        if kleur == globale_enums.veld_kleuren.zwart:
+            return globale_enums.veld_rgb_kleuren.blauw.value

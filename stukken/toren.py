@@ -3,10 +3,10 @@ from globale_enums import Lineaire_Richtingen, StukType
 import globale_variabelen
 
 class Toren(Stuk):
-    def __init__(self, kleur, veld):
+    def __init__(self, kleur):
         #geef de stukinformatie door aan de moederclass
-        super().__init__(StukType.Toren, kleur, veld)
-        self.Plaatje = globale_variabelen.plaatjes[self.stuktype][self.kleur]
+        super().__init__(StukType.Toren, kleur)
+        self._plaatje = globale_variabelen.plaatjes[self.stuktype][self.kleur]
         self.StelBeweegRichtingenIn()
 
     def StelBeweegRichtingenIn(self):

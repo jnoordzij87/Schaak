@@ -1,7 +1,7 @@
 from globale_enums import Spelers, Lineaire_Richtingen, StukKleur, StukType
 
 class Stuk:
-    def __init__(self, stuktype, stukkleur, veld):
+    def __init__(self, stuktype, stukkleur):
         self._beweegrichtingen = None
         self.stuktype = stuktype
         self.kleur = stukkleur
@@ -18,8 +18,8 @@ class Stuk:
         if self.kleur == StukKleur.Zwart:
             return Spelers.zwart
 
-    def kan_stuk_naar_veld(self, stuk, coordinaat):
-        stukopties = stuk.krijg_beweegopties_in_positie()
+    def kan_stuk_naar_veld(self, stuk, coordinaat, positie):
+        stukopties = stuk.krijg_beweegopties_in_positie(positie)
         is_mogelijk = coordinaat in stukopties
         return is_mogelijk
 

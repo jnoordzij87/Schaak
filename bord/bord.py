@@ -1,4 +1,5 @@
 import pygame
+from typing import List
 import globale_enums
 from veld.getekendveld import GetekendVeld
 from veld.veldbasis import VeldBasis
@@ -12,19 +13,19 @@ class Bord:
         pass
 
     @property
-    def velden(self) -> list(VeldBasis):
+    def velden(self) -> list[VeldBasis]:
         """Lijst met alle velden van het bord"""
         return self._velden
 
     @property
-    def getekende_velden(self) -> dict(str, GetekendVeld):
+    def getekende_velden(self) -> dict[str, GetekendVeld]:
         """Dictionary met alle getekende veldvormen, geindexeerd per coordinaat"""
         return self._getekende_velden
 
     def _maak_velden(self):
         """Maakt 64 velden met coordinaten en kleuren en slaat deze op in een lijst"""
         self._velden = [] #maak lege lijst
-        beginkleur_rij = globale_enums.vakjeskleuren.wit.value
+        beginkleur_rij = globale_enums.veld_kleuren.wit
         for rij in self._rijen:
             kleur_kolom = beginkleur_rij
             for kolom in self._kolommen:
@@ -35,6 +36,11 @@ class Bord:
                 kleur_kolom = self._verander_van_kleur(kleur_kolom) #verander van kleur voor het volgende vakje
             beginkleur_rij = self._verander_van_kleur(beginkleur_rij) #begin de volgende rij met een andere beginkleur
 
+    def teken_coordinaten(self, scherm):
+        for veld in self.getekende_velden.values():
+            font = pygame.font.Font('freesansbold.ttf', 16)
+            text = font.render(veld.coordinaat, True, globale_enums.veld_rgb_kleuren.groen.value)
+            scherm.blit(text, (veld.schermpositie_x, veld.schermpositie_y))
 
     def teken_velden(self, scherm, schermbreedte, schermhoogte):
         """Tekent de velden van het bord op het scherm en slaat op in lijst"""
@@ -50,9 +56,12 @@ class Bord:
             for kolom in self._kolommen:
                 veld = self.velden[teller]
                 coord = veld.coordinaat
-                getekend_veld = GetekendVeld(scherm, positie_x, positie_y, vakjesgrootte)
+                getekend_veld = GetekendVeld(scherm, positie_x, positie_y, vakjesgrootte, veld.coordinaat, veld.kleur)
                 self.getekende_velden[coord] = getekend_veld
                 teller = teller + 1
+                positie_x += vakjesgrootte
+            positie_y -= vakjesgrootte
+            positie_x = 0
 
     def TekenStukOpties(self, coordinaten, scherm):
         """
@@ -69,10 +78,10 @@ class Bord:
             pygame.draw.rect(scherm, (255, 0, 0), (mpX, mpY, 10, 10))
 
     def _verander_van_kleur(self, huidigeKleur):
-        if huidigeKleur == globale_enums.vakjeskleuren.wit.value:
-            return globale_enums.vakjeskleuren.blauw.value
-        if huidigeKleur == globale_enums.vakjeskleuren.blauw.value:
-            return globale_enums.vakjeskleuren.wit.value
+        if huidigeKleur == globale_enums.veld_kleuren.wit:
+            return globale_enums.veld_kleuren.zwart
+        if huidigeKleur == globale_enums.veld_kleuren.zwart:
+            return globale_enums.veld_kleuren.wit
 
     def RijOmhoog(self, rijnummer):
         if rijnummer == 8:

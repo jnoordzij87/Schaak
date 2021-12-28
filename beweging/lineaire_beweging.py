@@ -1,9 +1,9 @@
-from beweging import Beweging
+from .beweging import Beweging
 from globale_enums import Lineaire_Richtingen
 
 
 class LineaireBeweging(Beweging):
-    def __init__(self, richtingen):
+    def __init__(self):
         super().__init__()
         pass
 
@@ -16,17 +16,17 @@ class LineaireBeweging(Beweging):
         resultaat = []
         teller = 0
         stuk_coord = positie.krijg_veld_van_stuk(stuk)
-        eerstvolgende_vakje = self.krijg_eerstvolgende_vakje_in_richting(stuk, stuk_coord, richting)
-        is_geldige_optie = positie._is_veld_geldige_optie_voor_stuk(stuk, eerstvolgende_vakje)
+        eerstvolgende_vakje = self.krijg_eerstvolgende_vakje_in_richting(positie, stuk_coord, richting)
+        is_geldige_optie = self._is_veld_geldige_optie_voor_stuk(stuk, eerstvolgende_vakje, positie)
         while is_geldige_optie and teller != maxaantal:  # stop als dit niet waar is
             # als we hier zijn is het volgende vakje geldig, voeg toe aan lijst
             resultaat.append(eerstvolgende_vakje)
             # als er een stuk van een andere kleur op het zojuist toegevoegde vakje staat, dan is dit het laatste vakje in deze richting, check
-            if positie._staat_er_een_stuk_van_andere_kleur_op_veld(stuk, eerstvolgende_vakje):
+            if self._staat_er_een_stuk_van_andere_kleur_op_veld(stuk, eerstvolgende_vakje, positie):
                 break  # stap uit de loop
             # als we hier zijn, kijk naar het volgende vakje, en ga door
-            eerstvolgende_vakje = positie.krijg_eerstvolgende_vakje_in_richting(eerstvolgende_vakje, richting)
-            is_geldige_optie = positie._is_veld_geldige_optie_voor_stuk(stuk, eerstvolgende_vakje)
+            eerstvolgende_vakje = self.krijg_eerstvolgende_vakje_in_richting(positie, eerstvolgende_vakje, richting)
+            is_geldige_optie = self._is_veld_geldige_optie_voor_stuk(stuk, eerstvolgende_vakje, positie)
             teller += 1
         # als uit loop: geef resultaat terug
         return resultaat

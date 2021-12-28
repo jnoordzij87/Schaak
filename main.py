@@ -21,7 +21,7 @@ globale_variabelen.huidige_positie = StartPositie(bord)
 #teken de velden van het bord op het scherm
 bord.teken_velden(scherm, schermbreedte, schermhoogte)
 #teken de stukken in de startpositie op het scherm
-globale_variabelen.huidige_positie.teken_positie()
+globale_variabelen.huidige_positie.teken_positie(scherm)
 
 #hier gaan we de game-loop in
 blijfDraaien = True
@@ -43,20 +43,15 @@ while blijfDraaien == True:
         hulpfuncties.BehandelSpelerAanZetVeranderd()
 
     #teken opnieuw alle elementen op het schaakbord
-    for veld in globale_variabelen.velden.values():
-        #teken het vakje
-        veld.Teken(scherm)
-
-        #teken het coordinaat
-        font = pygame.font.Font('freesansbold.ttf', 16)
-        text = font.render(veld.Kolom + veld.Rij, True, globale_enums.vakjeskleuren.groen.value)
-        scherm.blit(text, (veld.PosX,veld.PosY))
-
-        #teken de plaatjes van de stukken
-        if veld.Stuk != None:
-            stukplaatje = pygame.image.load(veld.Stuk._plaatje)
-            stukplaatje = pygame.transform.scale(stukplaatje, (stukplaatje.get_width() * 0.8, stukplaatje.get_height() * 0.8))
-            scherm.blit(stukplaatje, (veld.PosX, veld.PosY))
+    bord.teken_velden(scherm, schermbreedte, schermhoogte)
+    bord.teken_coordinaten(scherm)
+    for veld in globale_variabelen.huidige_positie.bord.getekende_velden.values():
+        stuk = globale_variabelen.huidige_positie.krijg_stuk_op_veld(veld.coordinaat)
+        if stuk != None:
+            stukplaatje = pygame.image.load(stuk._plaatje)
+            stukplaatje = pygame.transform.scale(
+                stukplaatje, (stukplaatje.get_width() * 0.8, stukplaatje.get_height() * 0.8))
+            scherm.blit(stukplaatje, (veld.schermpositie_x, veld.schermpositie_y))
 
     #teken als laatst de stukopties
     if globale_variabelen.geselecteerdeStukOpties != None:

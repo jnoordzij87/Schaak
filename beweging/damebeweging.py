@@ -1,4 +1,4 @@
-from lineaire_beweging import LineaireBeweging
+from .lineaire_beweging import LineaireBeweging
 from globale_enums import Lineaire_Richtingen
 
 

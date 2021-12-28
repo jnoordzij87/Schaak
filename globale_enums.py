@@ -1,11 +1,15 @@
 #globale enums
 from enum import Enum
 
-class vakjeskleuren(Enum):
+class veld_rgb_kleuren(Enum):
     wit = (255, 255, 255)
     blauw = (0, 0, 128)
     groen = (0, 255, 0)
     rood = (255, 0, 0)
+
+class veld_kleuren(Enum):
+    wit = 1,
+    zwart = 2
 
 class Spelers(Enum):
     wit = 1

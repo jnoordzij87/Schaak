@@ -12,8 +12,8 @@ def BehandelStukGeselecteerd(stuk : Stuk):
     #2) en het huidige geselecteerde stuk is van een andere kleur als het vorige,
     #3) en het huidige geselecteerde stuk staat op een veld dat gezien wordt door het vorige,
     #dan wil de gebruiker het huidige geselecteerde stuk pakken.
-    vorige_geselecteerde_stuk = Stuk(globale_variabelen.geselecteerdeStuk)
-    nieuwe_geselecteerde_stuk = Stuk(stuk)
+    vorige_geselecteerde_stuk = globale_variabelen.geselecteerdeStuk
+    nieuwe_geselecteerde_stuk = stuk
     positie = globale_variabelen.huidige_positie
     #check 1) kijk of er een stuk geselecteerd was
     if vorige_geselecteerde_stuk == None:
@@ -43,7 +43,7 @@ def Selecteer(stuk):
         #selectie toegestaan
         #wijs het stuk aan als het geselecteerde stuk
         globale_variabelen.geselecteerdeStuk = stuk
-        globale_variabelen.geselecteerdeStukOpties = stuk.krijg_veldopties()
+        globale_variabelen.geselecteerdeStukOpties = stuk.krijg_beweegopties_in_positie(globale_variabelen.huidige_positie)
     else:
         #we mogen dit stuk niet selecteren. Behandel als deselectie-actie
         DeSelecteer()
@@ -101,7 +101,7 @@ def BehandelVeldGeselecteerd(veld : GetekendVeld):
             #er was een stuk geselecteerd toen het lege veld werd aangeklikt
             #kijk of het stuk naar het aangeklikte veld verplaatst kan worden
             geselecteerdeStuk = globale_variabelen.geselecteerdeStuk
-            if globale_variabelen.huidige_positie.kan_stuk_naar_veld(geselecteerdeStuk, veld):
+            if geselecteerdeStuk.kan_stuk_naar_veld(geselecteerdeStuk, veld, globale_variabelen.huidige_positie):
                 # ja! het stuk kan naar het aangeklikte veld. verplaats het stuk!
                 globale_variabelen.huidige_positie.verplaats_stuk(geselecteerdeStuk, veld)
             else:

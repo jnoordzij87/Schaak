@@ -32,12 +32,12 @@ class Positie:
         return self._bord
 
     @property
-    def actieve_stukken(self) -> list(Stuk):
+    def actieve_stukken(self) -> list[Stuk]:
         """Lijst met alle stukken op het bord"""
         return self._actieve_stukken
 
     @property
-    def veldbezetting(self) -> dict(str, Stuk):
+    def veldbezetting(self) -> dict[str, Stuk]:
         """Dictionary met per veld opzoekbaar wat er op staat"""
         return self._veldbezetting
 
@@ -74,7 +74,7 @@ class Positie:
                 stukkenVanSpeler.append(stuk)
         return stukkenVanSpeler
 
-    def krijg_veldopties_voor_stuk(self, stuk : Stuk) -> list(str):
+    def krijg_veldopties_voor_stuk(self, stuk : Stuk) -> list[str]:
         resultaat = []
         for beweegrichting in stuk.beweegrichtingen:
             beschikbare_velden_in_richting = self.krijg_veldopties_voor_stuk_in_richting(
@@ -109,15 +109,15 @@ class Positie:
     def teken_positie(self, scherm):
         """Tekent de stukken in het spel op de juiste positie op het scherm"""
         for stuk in self.actieve_stukken:
-            stuk_bordcoordinaat = self._krijg_stukpositie(stuk)
+            stuk_bordcoordinaat = self.krijg_veld_van_stuk(stuk)
             stuk_schermpositie_x = self._bord.getekende_velden[stuk_bordcoordinaat].schermpositie_x
             stuk_schermpositie_y = self._bord.getekende_velden[stuk_bordcoordinaat].schermpositie_y
             stuk_plaatje = plaatjesOpzoeker[stuk.stuktype][stuk.kleur]
             #initialiseer het plaatje en schaal naar de grootte van het veld
-            pygame.image.load(stuk_plaatje)
-            pygame.transform.scale(stuk_plaatje,(stuk_plaatje.get_width() * 0.8, stuk_plaatje.get_height() * 0.8))
+            surface = pygame.image.load(stuk_plaatje)
+            pygame.transform.scale(surface,(surface.get_width() * 0.8, surface.get_height() * 0.8))
             #voeg het plaatje toe aan het scherm op de juiste positie
-            scherm.blit(stuk_plaatje, (stuk_schermpositie_x, stuk_schermpositie_y))
+            scherm.blit(surface, (stuk_schermpositie_x, stuk_schermpositie_y))
 
     def _initialiseer_veldbezetting(self):
         """Initialiseer dictionary met lege veldbezetting"""
