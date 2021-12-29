@@ -20,6 +20,7 @@ globale_variabelen.huidige_positie = StartPositie(bord)
 
 #teken de velden van het bord op het scherm
 bord.teken_velden(scherm, schermbreedte, schermhoogte)
+bord.teken_coordinaten(scherm)
 #teken de stukken in de startpositie op het scherm
 globale_variabelen.huidige_positie.teken_positie(scherm)
 

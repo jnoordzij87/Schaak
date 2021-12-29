@@ -25,7 +25,7 @@ class Bord:
     def _maak_velden(self):
         """Maakt 64 velden met coordinaten en kleuren en slaat deze op in een lijst"""
         self._velden = [] #maak lege lijst
-        beginkleur_rij = globale_enums.veld_kleuren.wit
+        beginkleur_rij = globale_enums.veld_kleuren.zwart #vakje linksonder is zwart
         for rij in self._rijen:
             kleur_kolom = beginkleur_rij
             for kolom in self._kolommen:
