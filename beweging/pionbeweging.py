@@ -13,7 +13,7 @@ class PionBeweging(LineaireBeweging):
         """De voorwaartse richting van de pion"""
         return self._basisrichting
 
-    def krijg_beweegopties_in_positie(self, stuk, positie):
+    def krijg_zicht_in_positie(self, stuk, positie):
         resultaat = []
         voorwaartse_opties = self.krijg_voorwaartse_opties(stuk, positie)
         pakopties = self.krijg_pakopties(stuk, positie)
@@ -30,10 +30,10 @@ class PionBeweging(LineaireBeweging):
 
     def krijg_voorwaartse_opties(self, stuk, positie):
         if not stuk.heeft_al_eens_bewogen:
-            voorwaartse_opties = self.krijg_beweegopties_voor_stuk_in_richting(
+            voorwaartse_opties = self.krijg_zicht_voor_stuk_in_richting(
                 stuk, self._basisrichting, positie, maxaantal = 2)
         else:
-            voorwaartse_opties = self.krijg_beweegopties_voor_stuk_in_richting(
+            voorwaartse_opties = self.krijg_zicht_voor_stuk_in_richting(
                 stuk, self._basisrichting, positie, maxaantal = 1)
         #check of er geen stuk op het voorwaartse veld staat (pionnen slaan niet voorwaarts)
         geldige_opties = []

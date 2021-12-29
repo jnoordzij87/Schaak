@@ -19,11 +19,15 @@ class KoningBeweging(LineaireBeweging):
             Lineaire_Richtingen.Rechts]
         return richtingen
 
-    def krijg_beweegopties_in_positie(self, stuk, positie):
+    def krijg_zicht_in_positie(self, stuk, positie):
+        #Wordt overschreven voor de koning omdat de koning maar 1 stap kan nemen
         resultaat = []
         for richting in self.bewegingsrichtingen:
-            opties_in_richting = self.krijg_beweegopties_voor_stuk_in_richting(
-                stuk, richting, positie, maxaantal=1)
+            opties_in_richting = self.krijg_zicht_voor_stuk_in_richting(stuk, richting, positie, maxaantal=1)
             resultaat.extend(opties_in_richting)
         return resultaat
+
+    def is_stuk_gepind(self, stuk, positie):
+        #een koning is nooit gepind
+        return False
 

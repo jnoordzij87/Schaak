@@ -7,7 +7,14 @@ class LineaireBeweging(Beweging):
         super().__init__()
         pass
 
-    def krijg_beweegopties_voor_stuk_in_richting(self, stuk, richting, positie, maxaantal = None):
+    def krijg_zicht_in_positie(self, stuk, positie):
+        resultaat = []
+        for richting in self.bewegingsrichtingen:
+            opties_in_richting = self.krijg_zicht_voor_stuk_in_richting(stuk, richting, positie)
+            resultaat.extend(opties_in_richting)
+        return resultaat
+
+    def krijg_zicht_voor_stuk_in_richting(self, stuk, richting, positie, maxaantal = None):
         """
         :return: een lijst met coordinaten in 1 richting, bijv ['E4', 'F4', 'G4', etc]
         """
@@ -17,7 +24,7 @@ class LineaireBeweging(Beweging):
         teller = 0
         stuk_coord = positie.krijg_veld_van_stuk(stuk)
         eerstvolgende_vakje = self.krijg_eerstvolgende_vakje_in_richting(positie, stuk_coord, richting)
-        is_geldige_optie = self._is_veld_geldige_optie_voor_stuk(stuk, eerstvolgende_vakje, positie)
+        is_geldige_optie = self._is_veld_geldig_en_niet_bezet(stuk, eerstvolgende_vakje, positie)
         while is_geldige_optie and teller != maxaantal:  # stop als dit niet waar is
             # als we hier zijn is het volgende vakje geldig, voeg toe aan lijst
             resultaat.append(eerstvolgende_vakje)
@@ -26,7 +33,7 @@ class LineaireBeweging(Beweging):
                 break  # stap uit de loop
             # als we hier zijn, kijk naar het volgende vakje, en ga door
             eerstvolgende_vakje = self.krijg_eerstvolgende_vakje_in_richting(positie, eerstvolgende_vakje, richting)
-            is_geldige_optie = self._is_veld_geldige_optie_voor_stuk(stuk, eerstvolgende_vakje, positie)
+            is_geldige_optie = self._is_veld_geldig_en_niet_bezet(stuk, eerstvolgende_vakje, positie)
             teller += 1
         # als uit loop: geef resultaat terug
         return resultaat

@@ -13,14 +13,18 @@ class Stuk:
         if self.kleur == StukKleur.Zwart:
             return Spelers.zwart
 
-    def kan_stuk_naar_veld(self, stuk, coordinaat, positie):
-        stukopties = stuk.krijg_beweegopties_in_positie(positie)
+    def kan_stuk_naar_veld(self, coordinaat, positie):
+        stukopties = self.krijg_beweegopties_in_positie(positie)
         is_mogelijk = coordinaat in stukopties
         return is_mogelijk
 
     def krijg_beweegopties_in_positie(self, positie):
         #wordt overschreven per ervend stuk
-        pass
+        return []
+
+    def krijg_zicht_in_positie(self, positie):
+        # wordt overschreven per ervend stuk
+        return []
 
     def is_stuk_van_speler(self, speler : Spelers):
         return self.eigenaar == speler

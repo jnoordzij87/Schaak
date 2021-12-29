@@ -9,5 +9,7 @@ class Toren(Stuk):
         self._plaatje = plaatjesOpzoeker[self.stuktype][self.kleur]
 
     def krijg_beweegopties_in_positie(self, positie):
-        """Doorgeefluik naar bewegingsclass"""
         return TorenBeweging().krijg_beweegopties_in_positie(self, positie)
+
+    def krijg_zicht_in_positie(self, positie):
+        return TorenBeweging().krijg_zicht_in_positie(self, positie)
