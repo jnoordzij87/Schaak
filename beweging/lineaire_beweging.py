@@ -10,7 +10,7 @@ class LineaireBeweging(Beweging):
     def krijg_zicht_in_positie(self, stuk, positie):
         resultaat = []
         for richting in self.bewegingsrichtingen:
-            opties_in_richting = self.krijg_zicht_voor_stuk_in_richting(stuk, richting, positie)
+            opties_in_richting = self.krijg_zicht_voor_stuk_in_richting(stuk, richting, positie, maxaantal=None)
             resultaat.extend(opties_in_richting)
         return resultaat
 

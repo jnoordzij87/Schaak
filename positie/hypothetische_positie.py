@@ -32,7 +32,7 @@ class HypothetischePositie(Positie):
 
     def staat_koning_van_speler_aan_zet_schaak(self):
         #krijg veld van koning
-        koning_coord = self.krijg_koningspositie(self.hypo_positie.speler_aan_zet)
+        koning_coord = self.krijg_koningspositie_van_speler(self.hypo_positie.speler_aan_zet)
         #krijg stukken van andere speler
         speler_niet_aan_zet = self.krijg_andere_speler(self.speler_aan_zet)
         stukken_andere_speler = self.krijg_alle_stukken_van_speler(speler_niet_aan_zet)
@@ -43,7 +43,7 @@ class HypothetischePositie(Positie):
                 #stuk ziet koning
                 return True
 
-    def krijg_koningspositie(self, speler):
+    def krijg_koningspositie_van_speler(self, speler):
         for stuk in self.krijg_alle_stukken_van_speler(speler):
             if stuk.stuktype == StukType.Koning:
                 koning_coord = self.krijg_veld_van_stuk(stuk)

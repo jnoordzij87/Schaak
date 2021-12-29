@@ -60,13 +60,16 @@ def BehandelGameOver():
 def DoeEenWillekeurigeZet(speler):
     positie = globale_variabelen.huidige_positie
     stukken = positie.krijg_alle_stukken_van_speler(speler)
-    bekeken_stukken = []
     # kies een willekeurig stuk, dat minstens 1 zet ter beschikking heeft
     # gebruik een while loop die doorgaat tot er een stuk is gevonden dat aan de vereisten voldoet
     stukMetGeldigeZetGevonden = False
     while not stukMetGeldigeZetGevonden:
         if len(stukken) == 0:
             BehandelGameOver()
+            return
+        if not stukken:
+            BehandelGameOver()
+            return
         # nog geen stuk met geldige zet gevonden. kies een random stuk
         stuk = random.choice(stukken)
         stukken.remove(stuk)
@@ -120,11 +123,12 @@ def BehandelVeldGeselecteerd(veld : GetekendVeld):
         #er is een leeg veld aangeklikt
         #kijk of het om een verplaats actie gaat
         if IsVerplaatsActie(veld):
-            #check of zet geldig is
-            geselecteerdeStuk = globale_variabelen.geselecteerdeStuk
-            stuk_huidig_veld = positie.krijg_veld_van_stuk(geselecteerdeStuk)
-            aangeklikte_veld = veld.coordinaat
-            positie.verplaats_stuk(geselecteerdeStuk, stuk_huidig_veld, aangeklikte_veld)
+            #als we hier zijn weten we dat de zet geldig is (pin check al gebeurd)
+            geselecteerde_stuk = globale_variabelen.geselecteerdeStuk
+            huidig_veld = positie.krijg_veld_van_stuk(geselecteerde_stuk)
+            nieuw_veld = veld.coordinaat
+            nieuwe_positie = Zet(positie, huidig_veld, nieuw_veld).doe_zet()
+            globale_variabelen.huidige_positie = nieuwe_positie
         elif WasErEenStukGeselecteerd():
             # er is een veld aangeklikt dat niet tot de mogelijkheden van het geselecteerde stuk behoort
             # de-selecteer het stuk

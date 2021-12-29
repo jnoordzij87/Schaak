@@ -28,6 +28,7 @@ class Positie:
         self._actieve_stukken = [] #lijst wordt gevuld bij initialiseren startpositie
         self._veldbezetting = self._initialiseer_veldbezetting()
         self._speler_aan_zet = None
+        self.staat_speler_aan_zet_schaak = False
 
     @property
     def bord(self):
@@ -54,7 +55,7 @@ class Positie:
 
     def staat_koning_van_speler_aan_zet_schaak(self):
         #krijg veld van koning
-        koning_coord = self.krijg_koningspositie(self.speler_aan_zet)
+        koning_coord = self.krijg_koningspositie_van_speler(self.speler_aan_zet)
         #krijg stukken van andere speler
         speler_niet_aan_zet = self.krijg_andere_speler(self.speler_aan_zet)
         stukken_andere_speler = self.krijg_alle_stukken_van_speler(speler_niet_aan_zet)
@@ -67,7 +68,7 @@ class Positie:
         #als we hier zijn, zijn alle stukken gecheckt en staat koning niet schaak
         return False
 
-    def krijg_koningspositie(self, speler):
+    def krijg_koningspositie_van_speler(self, speler):
         for stuk in self.krijg_alle_stukken_van_speler(speler):
             if stuk.stuktype == StukType.Koning:
                 koning_coord = self.krijg_veld_van_stuk(stuk)
@@ -89,6 +90,17 @@ class Positie:
     def verwijder_stuk_op_veld(self, coordinaat):
         self.veldbezetting[coordinaat] = None
 
+    def verplaats_hypothetisch(self, stuk : Stuk, oudeveld : str, nieuweveld : str):
+        # update veldbezetting
+        self.veldbezetting[oudeveld] = None
+        self.veldbezetting[nieuweveld] = stuk
+        # reset globale variabelen:
+        globale_variabelen.geselecteerdeStuk = None
+        globale_variabelen.geselecteerdeStukOpties = None
+        globale_variabelen.moet_bord_bijgewerkt_worden = True
+        # registreer stuk bewogen
+        stuk.heeft_al_eens_bewogen = True
+
     def verplaats_stuk(self, stuk : Stuk, oudeveld : str, nieuweveld : str):
         #update veldbezetting
         self.veldbezetting[oudeveld] = None
@@ -97,10 +109,10 @@ class Positie:
         globale_variabelen.geselecteerdeStuk = None
         globale_variabelen.geselecteerdeStukOpties = None
         globale_variabelen.moet_bord_bijgewerkt_worden = True
-        #na het verplaatsen van een stuk is de andere speler aan de beurt
-        self.verander_speler_aan_zet()
         #registreer stuk bewogen
         stuk.heeft_al_eens_bewogen = True
+        # na het verplaatsen van een stuk is de andere speler aan de beurt
+        self.verander_speler_aan_zet()
 
     def krijg_alle_stukken_van_speler(self, speler : Spelers):
         stukkenVanSpeler = []  #start lege lijst
@@ -160,7 +172,8 @@ class Positie:
         if speler == Spelers.zwart:
             return Spelers.wit
 
-    def verander_speler_aan_zet(self):
+    def verander_speler_aan_zet(self, ):
         huidige_speler_aan_zet = self.speler_aan_zet
         nieuwe_speler_aan_zet = self.krijg_andere_speler(huidige_speler_aan_zet)
         self._speler_aan_zet = nieuwe_speler_aan_zet
+
