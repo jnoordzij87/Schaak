@@ -1,26 +1,13 @@
 from stukken.stuk import Stuk
-from globale_enums import Lineaire_Richtingen, StukType
-import globale_variabelen
+from globale_enums import StukType
+from beweging.koningbeweging import KoningBeweging
+from plaatjes.opzoeker import plaatjesOpzoeker
 
 class Koning(Stuk):
     def __init__(self, kleur):
-        #geef de stukinformatie door aan de moederclass
         super().__init__(StukType.Koning, kleur)
-        self._plaatje = globale_variabelen.plaatjes[self.stuktype][self.kleur]
-        self.StelBeweegRichtingenIn()
+        self._plaatje = plaatjesOpzoeker[self.stuktype][self.kleur]
 
-    def StelBeweegRichtingenIn(self):
-        self.BeweegRichtingen = [Lineaire_Richtingen.RechtsOnder,
-                                 Lineaire_Richtingen.RechtsBoven,
-                                 Lineaire_Richtingen.LinksBoven,
-                                 Lineaire_Richtingen.LinksOnder,
-                                 Lineaire_Richtingen.Boven,
-                                 Lineaire_Richtingen.Onder,
-                                 Lineaire_Richtingen.Links,
-                                 Lineaire_Richtingen.Rechts]
-
-    def krijg_veldopties(self):
-        resultaat = []
-        for beweegrichting in self.BeweegRichtingen:
-            resultaat.extend(self.krijg_veldopties_in_richting(self.HuidigVeld.Coordinaat(), beweegrichting, maxaantal=1))
-        return resultaat
+    def krijg_beweegopties_in_positie(self, positie):
+        """Doorgeefluik naar bewegingsclass"""
+        return KoningBeweging().krijg_beweegopties_in_positie(self, positie)

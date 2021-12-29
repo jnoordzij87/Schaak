@@ -56,6 +56,7 @@ class Positie:
         pakkend_stuk_huidig_veld = self.krijg_veld_van_stuk(pakkendestuk)
         pakkend_stuk_nieuw_veld = self.krijg_veld_van_stuk(gepaktestuk)
         self.verplaats_stuk(pakkendestuk, pakkend_stuk_huidig_veld, pakkend_stuk_nieuw_veld)
+        globale_variabelen.moet_bord_bijgewerkt_worden = True
 
     def verplaats_stuk(self, stuk : Stuk, oudeveld : str, nieuweveld : str):
         #update veldbezetting
@@ -64,23 +65,18 @@ class Positie:
         #reset globale variabelen:
         globale_variabelen.geselecteerdeStuk = None
         globale_variabelen.geselecteerdeStukOpties = None
+        globale_variabelen.moet_bord_bijgewerkt_worden = True
         #na het verplaatsen van een stuk is de andere speler aan de beurt
         self.verander_speler_aan_zet()
+        #registreer stuk bewogen
+        stuk.heeft_al_eens_bewogen = True
 
     def krijg_alle_stukken_van_speler(self, speler : Spelers):
         stukkenVanSpeler = []  #start lege lijst
         for stuk in self.actieve_stukken:
-            if stuk.krijg_eigenaar_van_stuk() == speler:
+            if stuk.eigenaar == speler:
                 stukkenVanSpeler.append(stuk)
         return stukkenVanSpeler
-
-    def krijg_veldopties_voor_stuk(self, stuk : Stuk) -> list[str]:
-        resultaat = []
-        for beweegrichting in stuk.beweegrichtingen:
-            beschikbare_velden_in_richting = self.krijg_veldopties_voor_stuk_in_richting(
-                stuk,beweegrichting)
-            resultaat.extend(beschikbare_velden_in_richting)
-        return resultaat
 
     def krijg_stuk_op_veld(self, veld : str) -> Stuk:
         """
@@ -109,15 +105,15 @@ class Positie:
     def teken_positie(self, scherm):
         """Tekent de stukken in het spel op de juiste positie op het scherm"""
         for stuk in self.actieve_stukken:
-            stuk_bordcoordinaat = self.krijg_veld_van_stuk(stuk)
-            stuk_schermpositie_x = self._bord.getekende_velden[stuk_bordcoordinaat].schermpositie_x
-            stuk_schermpositie_y = self._bord.getekende_velden[stuk_bordcoordinaat].schermpositie_y
+            veld = self.krijg_veld_van_stuk(stuk)
+            veld_schermpositie_x = self._bord.getekende_velden[veld].schermpositie_x
+            veld_schermpositie_y = self._bord.getekende_velden[veld].schermpositie_y
             stuk_plaatje = plaatjesOpzoeker[stuk.stuktype][stuk.kleur]
             #initialiseer het plaatje en schaal naar de grootte van het veld
             surface = pygame.image.load(stuk_plaatje)
             pygame.transform.scale(surface,(surface.get_width() * 0.8, surface.get_height() * 0.8))
             #voeg het plaatje toe aan het scherm op de juiste positie
-            scherm.blit(surface, (stuk_schermpositie_x, stuk_schermpositie_y))
+            scherm.blit(surface, (veld_schermpositie_x, veld_schermpositie_y))
 
     def _initialiseer_veldbezetting(self):
         """Initialiseer dictionary met lege veldbezetting"""
@@ -130,6 +126,6 @@ class Positie:
     def verander_speler_aan_zet(self):
         huidigeSpeler = self.speler_aan_zet
         if huidigeSpeler == Spelers.wit:
-            self.speler_aan_zet = Spelers.zwart
+            self._speler_aan_zet = Spelers.zwart
         if huidigeSpeler == Spelers.zwart:
-            self.speler_aan_zet = Spelers.wit
+            self._speler_aan_zet = Spelers.wit

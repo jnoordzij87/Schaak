@@ -1,15 +1,10 @@
-from globale_enums import Spelers, Lineaire_Richtingen, StukKleur, StukType
+from globale_enums import Spelers, StukKleur
 
 class Stuk:
     def __init__(self, stuktype, stukkleur):
-        self._beweegrichtingen = None
         self.stuktype = stuktype
         self.kleur = stukkleur
         self.heeft_al_eens_bewogen = False
-
-    @property
-    def beweegrichtingen(self) -> list(Lineaire_Richtingen):
-        return self._beweegrichtingen
 
     @property
     def eigenaar(self):

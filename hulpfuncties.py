@@ -24,9 +24,9 @@ def BehandelStukGeselecteerd(stuk : Stuk):
         #check 2) kijk of stuk van andere kleur is
         is_andere_kleur = vorige_geselecteerde_stuk.kleur != nieuwe_geselecteerde_stuk.kleur
         # check 3) kijk of het huidige geselecteerde stuk wordt 'gezien' door vorige stuk
-        nieuwe_geselecteerde_stuk_veld = nieuwe_geselecteerde_stuk.HuidigVeld.Coordinaat()
-        vorige_geselecteerde_stuk_opties = globale_variabelen.geselecteerdeStukOpties
-        ziet_vorig_stuk_nieuw_stuk = nieuwe_geselecteerde_stuk_veld in vorige_geselecteerde_stuk_opties #dit kijkt of waarde in lijst voorkomt
+        vorig_geselecteerde_stuk_opties = vorige_geselecteerde_stuk.krijg_beweegopties_in_positie(positie)
+        nieuw_geselecteerde_stuk_coord = positie.krijg_veld_van_stuk(nieuwe_geselecteerde_stuk)
+        ziet_vorig_stuk_nieuw_stuk = nieuw_geselecteerde_stuk_coord in vorig_geselecteerde_stuk_opties #dit kijkt of waarde in lijst voorkomt
         # combineer (2) en (3) om te kijken of het om een pak-actie gaat
         kan_vorig_stuk_nieuw_stuk_pakken = ziet_vorig_stuk_nieuw_stuk and is_andere_kleur #alleen waar als allebei waar is
         if kan_vorig_stuk_nieuw_stuk_pakken:
@@ -44,6 +44,7 @@ def Selecteer(stuk):
         #wijs het stuk aan als het geselecteerde stuk
         globale_variabelen.geselecteerdeStuk = stuk
         globale_variabelen.geselecteerdeStukOpties = stuk.krijg_beweegopties_in_positie(globale_variabelen.huidige_positie)
+        globale_variabelen.moet_bord_bijgewerkt_worden = True
     else:
         #we mogen dit stuk niet selecteren. Behandel als deselectie-actie
         DeSelecteer()
@@ -51,6 +52,7 @@ def Selecteer(stuk):
 def DeSelecteer():
     globale_variabelen.geselecteerdeStuk = None
     globale_variabelen.geselecteerdeStukOpties = None
+    globale_variabelen.moet_bord_bijgewerkt_worden = True
 
 def WasErEenStukGeselecteerd():
     return globale_variabelen.geselecteerdeStuk != None
@@ -65,7 +67,7 @@ def DoeEenWillekeurigeZet(speler):
         # nog geen stuk met geldige zet gevonden. kies een random stuk
         stuk = random.choice(stukken)
         # krijg de opties van het stuk
-        opties = positie.krijg_veldopties_voor_stuk(stuk)
+        opties = stuk.krijg_beweegopties_in_positie(positie)
         # als het stuk opties heeft, is er een geldig stuk gevonden
         if len(opties) > 0:
             stukMetGeldigeZetGevonden = True
@@ -83,31 +85,34 @@ def DoeEenWillekeurigeZet(speler):
         positie.verplaats_stuk(stuk, stuk_huidig_veld, gekozenCoord)
 
 def BehandelSpelerAanZetVeranderd():
-    huidigeSpeler = globale_variabelen.spelerAanZet
+    huidigeSpeler = globale_variabelen.huidige_positie.speler_aan_zet
     if huidigeSpeler == globale_enums.Spelers.zwart:
         DoeEenWillekeurigeZet(huidigeSpeler)
 
 def BehandelVeldGeselecteerd(veld : GetekendVeld):
+    positie = globale_variabelen.huidige_positie
     #kijk of er een stuk op het veld staat
-    stuk_op_veld = globale_variabelen.huidige_positie.staat_er_een_stuk_op_dit_veld(veld.coordinaat)
+    stuk_op_veld = positie.staat_er_een_stuk_op_dit_veld(veld.coordinaat)
     if stuk_op_veld:
-        stuk = globale_variabelen.huidige_positie.krijg_stuk_op_veld(veld.coordinaat)
+        stuk = positie.krijg_stuk_op_veld(veld.coordinaat)
         #er is een stuk aangeklikt. behandel
         BehandelStukGeselecteerd(stuk)
     else:
         #er is een leeg veld aangeklikt
         #kijk of het om een verplaats actie gaat
         if WasErEenStukGeselecteerd():
-            #er was een stuk geselecteerd toen het lege veld werd aangeklikt
+            #ja! er was een stuk geselecteerd toen het lege veld werd aangeklikt
             #kijk of het stuk naar het aangeklikte veld verplaatst kan worden
             geselecteerdeStuk = globale_variabelen.geselecteerdeStuk
-            if geselecteerdeStuk.kan_stuk_naar_veld(geselecteerdeStuk, veld, globale_variabelen.huidige_positie):
-                # ja! het stuk kan naar het aangeklikte veld. verplaats het stuk!
-                globale_variabelen.huidige_positie.verplaats_stuk(geselecteerdeStuk, veld)
-            else:
-                #er is een veld aangeklikt dat niet tot de mogelijkheden van het geselecteerde stuk behoort
-                #de-selecteer het stuk
-                DeSelecteer()
+            stuk_huidig_veld = positie.krijg_veld_van_stuk(geselecteerdeStuk)
+            aangeklikte_veld = veld.coordinaat
+        if geselecteerdeStuk.kan_stuk_naar_veld(geselecteerdeStuk, aangeklikte_veld, positie):
+            # ja! het stuk kan naar het aangeklikte veld. verplaats het stuk!
+            globale_variabelen.huidige_positie.verplaats_stuk(geselecteerdeStuk, stuk_huidig_veld, aangeklikte_veld)
+        else:
+            #er is een veld aangeklikt dat niet tot de mogelijkheden van het geselecteerde stuk behoort
+            #de-selecteer het stuk
+            DeSelecteer()
 
 def BehandelKlikGebeurtenis(event):
     """

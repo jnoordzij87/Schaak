@@ -1,22 +1,13 @@
 from stukken.stuk import Stuk
-from globale_enums import Lineaire_Richtingen, StukType
-import globale_variabelen
+from globale_enums import StukType
+from beweging.torenbeweging import TorenBeweging
+from plaatjes.opzoeker import plaatjesOpzoeker
 
 class Toren(Stuk):
     def __init__(self, kleur):
-        #geef de stukinformatie door aan de moederclass
         super().__init__(StukType.Toren, kleur)
-        self._plaatje = globale_variabelen.plaatjes[self.stuktype][self.kleur]
-        self.StelBeweegRichtingenIn()
+        self._plaatje = plaatjesOpzoeker[self.stuktype][self.kleur]
 
-    def StelBeweegRichtingenIn(self):
-        self.BeweegRichtingen = [Lineaire_Richtingen.Boven,
-                                 Lineaire_Richtingen.Onder,
-                                 Lineaire_Richtingen.Links,
-                                 Lineaire_Richtingen.Rechts]
-
-    def krijg_veldopties(self):
-        resultaat = []
-        for beweegrichting in self.BeweegRichtingen:
-            resultaat.extend(self.krijg_veldopties_in_richting(self.HuidigVeld.Coordinaat(), beweegrichting))
-        return resultaat
+    def krijg_beweegopties_in_positie(self, positie):
+        """Doorgeefluik naar bewegingsclass"""
+        return TorenBeweging().krijg_beweegopties_in_positie(self, positie)

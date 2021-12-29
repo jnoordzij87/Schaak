@@ -35,17 +35,23 @@ class PionBeweging(LineaireBeweging):
         else:
             voorwaartse_opties = self.krijg_beweegopties_voor_stuk_in_richting(
                 stuk, self._basisrichting, positie, maxaantal = 1)
-        return voorwaartse_opties
+        #check of er geen stuk op het voorwaartse veld staat (pionnen slaan niet voorwaarts)
+        geldige_opties = []
+        for optie in voorwaartse_opties:
+            if not positie.staat_er_een_stuk_op_dit_veld(optie):
+                geldige_opties.append(optie)
+        return geldige_opties
 
     def krijg_pakopties(self, stuk, positie):
         resultaat = []
         huidige_coord = positie.krijg_veld_van_stuk(stuk)
         for richting in self.krijg_pakrichtingen():
             eerstvolgende_vakje = self.krijg_eerstvolgende_vakje_in_richting(positie, huidige_coord, richting)
-            if positie.staat_er_een_stuk_op_dit_veld(eerstvolgende_vakje):
-                #het is een pakoptie als het een stuk van de tegenstander is
-                if positie.krijg_stuk_op_veld(eerstvolgende_vakje).kleur != stuk.kleur:
-                    resultaat.append(eerstvolgende_vakje)
+            if eerstvolgende_vakje != None:
+                if positie.staat_er_een_stuk_op_dit_veld(eerstvolgende_vakje):
+                    #het is een pakoptie als het een stuk van de tegenstander is
+                    if positie.krijg_stuk_op_veld(eerstvolgende_vakje).kleur != stuk.kleur:
+                        resultaat.append(eerstvolgende_vakje)
         return resultaat
 
     def krijg_pakrichtingen(self):

@@ -43,22 +43,19 @@ while blijfDraaien == True:
         hulpfuncties.BehandelSpelerAanZetVeranderd()
 
     #teken opnieuw alle elementen op het schaakbord
-    bord.teken_velden(scherm, schermbreedte, schermhoogte)
-    bord.teken_coordinaten(scherm)
-    for veld in globale_variabelen.huidige_positie.bord.getekende_velden.values():
-        stuk = globale_variabelen.huidige_positie.krijg_stuk_op_veld(veld.coordinaat)
-        if stuk != None:
-            stukplaatje = pygame.image.load(stuk._plaatje)
-            stukplaatje = pygame.transform.scale(
-                stukplaatje, (stukplaatje.get_width() * 0.8, stukplaatje.get_height() * 0.8))
-            scherm.blit(stukplaatje, (veld.schermpositie_x, veld.schermpositie_y))
-
-    #teken als laatst de stukopties
-    if globale_variabelen.geselecteerdeStukOpties != None:
-        bord.TekenStukOpties(globale_variabelen.geselecteerdeStukOpties, scherm)
+    if globale_variabelen.moet_bord_bijgewerkt_worden:
+        bord.teken_velden(scherm, schermbreedte, schermhoogte)
+        bord.teken_coordinaten(scherm)
+        globale_variabelen.huidige_positie.teken_positie(scherm)
+        #teken als laatst de stukopties
+        if globale_variabelen.geselecteerdeStukOpties != None:
+            bord.TekenStukOpties(globale_variabelen.geselecteerdeStukOpties, scherm)
+        #bord is bijgewerkt
+        globale_variabelen.moet_bord_bijgewerkt_worden = False
 
     #update het scherm
     pygame.display.flip()
+
 
 #we komen hier alleen als we uit de game-loop zijn
 pygame.quit()

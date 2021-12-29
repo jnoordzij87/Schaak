@@ -12,8 +12,14 @@ class Beweging:
         pass
 
     def _is_veld_geldige_optie_voor_stuk(self, stuk, coordinaat, positie):
+        if coordinaat == None:
+            #het veld is niet geldig (buiten rand van bord)
+            return False
         bezet_door_eigen_stuk = self._staat_er_een_stuk_van_zelfde_kleur_op_veld(stuk, coordinaat, positie)
-        return coordinaat != None and not bezet_door_eigen_stuk
+        if bezet_door_eigen_stuk:
+            return False
+        else:
+            return True
 
     def _staat_er_een_stuk_van_andere_kleur_op_veld(self, stuk, veld, positie):
         staat_stuk_op_veld = positie.staat_er_een_stuk_op_dit_veld(veld)
