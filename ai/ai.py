@@ -21,7 +21,7 @@ class AI:
                     zet.doe_zet()
                     return
         #als we hier zijn is er geen stuk met een geldige zet: schaakmat!
-        hulpfuncties.BehandelGameOver()
+        globale_variabelen.schaakmat = True
 
     def DoeEenWillekeurigeZet(self, speler):
         self.doe_random_geldige_zet(speler)

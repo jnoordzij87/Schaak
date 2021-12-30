@@ -18,6 +18,9 @@ while houdspeldraaiend == True:
     moet_bord_geupdate_worden = False
     #controleer muisklikgebeurtenissen
     houdspeldraaiend = hulpfuncties.CheckMuisKlikGebeurtenissen()
+    if globale_variabelen.schaakmat == True:
+        continue
+
     #controleer gewijzigde selectie. update bord als nodig
     if hulpfuncties.IsSelectieGewijzigd(huidige_selectie):
         #stuk selectie gewijzigd
@@ -31,7 +34,6 @@ while houdspeldraaiend == True:
     #update bord als nodig
     if moet_bord_geupdate_worden == True:
         hulpfuncties.UpdateVisueleElementen(scherm, schermbreedte, schermhoogte)
-
     #update het scherm
     pygame.display.flip()
 

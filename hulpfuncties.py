@@ -1,5 +1,3 @@
-import random
-
 import globale_enums
 import globale_variabelen
 from veld.getekendveld import GetekendVeld
@@ -12,10 +10,8 @@ from positie.startpositie import StartPositie
 from playsound import playsound
 import os
 
-def BehandelGameOver():
-    globale_variabelen.schaakmat = True
-
 def BehandelSchaakmat():
+    globale_variabelen.schaakmat = True
     abspath = os.path.abspath('geluiden/Tada-sound.mp3')
     playsound(abspath)
 
@@ -106,12 +102,12 @@ def DeSelecteer():
 def WasErEenStukGeselecteerd():
     return globale_variabelen.geselecteerdeStuk != None
 
-
-
 def DoeEenWillekeurigeZet(speler):
     AI().doe_random_geldige_zet(speler)
 
 def BehandelSpelerAanZetVeranderd():
+    if globale_variabelen.schaakmat == True:
+        return
     huidigeSpeler = globale_variabelen.huidige_positie.speler_aan_zet
     if huidigeSpeler == globale_enums.Spelers.zwart:
         DoeEenWillekeurigeZet(huidigeSpeler)
