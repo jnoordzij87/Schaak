@@ -19,8 +19,7 @@ class AI:
                 zet = Zet(positie, stuk_huidig_veld, veld_optie)
                 if zet.is_zet_geldig():
                     zet.doe_zet()
-                else:
-                    pass
+                    return
         #als we hier zijn is er geen stuk met een geldige zet: schaakmat!
         hulpfuncties.BehandelGameOver()
 

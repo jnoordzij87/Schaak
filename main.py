@@ -1,63 +1,40 @@
 import pygame
 import globale_enums
 import globale_variabelen
-from bord.bord import Bord
 import hulpfuncties
-from positie.startpositie import StartPositie
 
 pygame.init()
-
-schermbreedte = 400
-schermhoogte = 400
-
+schermbreedte, schermhoogte = 400, 400
 scherm = pygame.display.set_mode((schermbreedte, schermhoogte))
 pygame.display.set_caption('Schaak')
+hulpfuncties.InitialiseerBord(scherm, schermbreedte, schermhoogte)
 
-#maak het bord
-bord = Bord()
-#maak startpositie en stel in als huidige positie
-globale_variabelen.huidige_positie = StartPositie(bord)
-
-#teken de velden van het bord op het scherm
-bord.teken_velden(scherm, schermbreedte, schermhoogte)
-bord.teken_coordinaten(scherm)
-#teken de stukken in de startpositie op het scherm
-globale_variabelen.huidige_positie.teken_positie(scherm)
-
-#hier gaan we de game-loop in
-blijfDraaien = True
-speler_aan_zet = globale_variabelen.huidige_positie.speler_aan_zet
-while blijfDraaien == True:
-
-    #kijk elke keer of er een speciale gebeurtenis heeft plaatsgevonden
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            #als we hier zijn is er op het kruisje geklikt
-            blijfDraaien = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            hulpfuncties.BehandelKlikGebeurtenis(event)
-
-    #check of speler aan zet is gewijzigd
-    if speler_aan_zet != globale_variabelen.huidige_positie.speler_aan_zet:
-        #verwerk wijziging
-        speler_aan_zet = globale_variabelen.huidige_positie.speler_aan_zet
+#ga de game-loop in
+houdspeldraaiend = True
+huidige_selectie = None
+speler_aan_zet = globale_enums.Spelers.wit
+while houdspeldraaiend == True:
+    #aan het begin van de loop is het bord up to date
+    moet_bord_geupdate_worden = False
+    #controleer muisklikgebeurtenissen
+    houdspeldraaiend = hulpfuncties.CheckMuisKlikGebeurtenissen()
+    #controleer gewijzigde selectie. update bord als nodig
+    if hulpfuncties.IsSelectieGewijzigd(huidige_selectie):
+        #stuk selectie gewijzigd
+        moet_bord_geupdate_worden = True
+        #update selectie
+        huidige_selectie = globale_variabelen.geselecteerdeStuk
+    #controleer gewijzigde speler aan zet. behandel als nodig
+    if hulpfuncties.IsSpelerAanZetGewijzigd(speler_aan_zet):
+        moet_bord_geupdate_worden = True
         hulpfuncties.BehandelSpelerAanZetVeranderd()
-
-    #teken opnieuw alle elementen op het schaakbord
-    if globale_variabelen.moet_bord_bijgewerkt_worden:
-        bord.teken_velden(scherm, schermbreedte, schermhoogte)
-        bord.teken_coordinaten(scherm)
-        globale_variabelen.huidige_positie.teken_positie(scherm)
-        #teken als laatst de stukopties
-        if globale_variabelen.geselecteerdeStukOpties != None:
-            bord.TekenStukOpties(globale_variabelen.geselecteerdeStukOpties, scherm)
-        #bord is bijgewerkt
-        globale_variabelen.moet_bord_bijgewerkt_worden = False
+    #update bord als nodig
+    if moet_bord_geupdate_worden == True:
+        hulpfuncties.UpdateVisueleElementen(scherm, schermbreedte, schermhoogte)
 
     #update het scherm
     pygame.display.flip()
 
-
-#we komen hier alleen als we uit de game-loop zijn
+#we komen hier als we uit de game-loop zijn
 pygame.quit()
 

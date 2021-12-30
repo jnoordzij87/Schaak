@@ -1,3 +1,4 @@
+import globale_variabelen
 from globale_enums import StukType
 import copy
 
@@ -9,10 +10,9 @@ class Zet():
 
     def doe_zet(self):
         self.doe_zet_in_positie(self.echte_positie)
-        komt_zet_met_schaak = self.geeft_verplaatste_stuk_schaak(self.echte_positie)
         self.echte_positie.verander_speler_aan_zet()
-        self.echte_positie.speler_aan_zet_staat_schaak = True
-        return self.echte_positie
+        globale_variabelen.huidige_positie = self.echte_positie
+        globale_variabelen.geselecteerdeStuk = None
 
     def geeft_verplaatste_stuk_schaak(self, positie):
         verplaatste_stuk = positie.krijg_stuk_op_veld(self.nieuw_veld)
@@ -20,7 +20,6 @@ class Zet():
         andere_speler = positie.krijg_andere_speler(positie.speler_aan_zet)
         koning_coord = positie.krijg_koningspositie_van_speler(andere_speler)
         return koning_coord in zicht_verplaatste_stuk
-
 
     def is_zet_geldig(self):
         hypothetische_positie = copy.deepcopy(self.echte_positie)
@@ -38,8 +37,6 @@ class Zet():
         staat_eigen_koning_schaak = self.staat_koning_van_speler_aan_zet_schaak(positie)
         return not staat_eigen_koning_schaak
 
-
-
     def is_pakactie(self, positie):
         staat_stuk_op_veld = positie.staat_er_een_stuk_op_dit_veld(self.nieuw_veld)
         if staat_stuk_op_veld:
@@ -52,7 +49,7 @@ class Zet():
         stuk = positie.krijg_stuk_op_veld(self.oud_veld)
         positie.veldbezetting[self.oud_veld] = None
         positie.veldbezetting[self.nieuw_veld] = stuk
-
+        stuk.heeft_al_eens_bewogen = True
 
     def pak_op_veld_in_positie(self, positie):
         # Verwijder het gepaktestuk van de lijst met actieve stukken

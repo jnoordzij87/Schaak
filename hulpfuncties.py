@@ -6,6 +6,51 @@ from veld.getekendveld import GetekendVeld
 from stukken.stuk import Stuk
 import pygame
 from zet.zet import Zet
+from ai.ai import AI
+from bord.bord import Bord
+from positie.startpositie import StartPositie
+
+def InitialiseerBord(scherm, schermbreedte, schermhoogte):
+    # maak het bord
+    bord = Bord()
+    # maak startpositie en stel in als huidige positie
+    globale_variabelen.huidige_positie = StartPositie(bord)
+    # teken de velden van het bord op het scherm
+    bord.teken_velden(scherm, schermbreedte, schermhoogte)
+    bord.teken_coordinaten(scherm)
+    # teken de stukken in de startpositie op het scherm
+    globale_variabelen.huidige_positie.teken_positie(scherm)
+
+def IsSelectieGewijzigd(huidige_selectie):
+    return globale_variabelen.geselecteerdeStuk != huidige_selectie
+
+def IsSpelerAanZetGewijzigd(speler_aan_zet):
+    return speler_aan_zet != globale_variabelen.huidige_positie.speler_aan_zet
+
+def CheckMuisKlikGebeurtenissen():
+    # kijk elke keer of er een speciale gebeurtenis heeft plaatsgevonden
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            # als we hier zijn is er op het kruisje geklikt
+            return False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # als we hier zijn is er in het scherm geklikt
+            BehandelKlikGebeurtenis(event)
+    return True
+
+def UpdateVisueleElementen(scherm, schermbreedte, schermhoogte):
+    bord = globale_variabelen.huidige_positie.bord
+    # teken opnieuw alle elementen op het schaakbord
+    bord.teken_velden(scherm, schermbreedte, schermhoogte)
+    bord.teken_coordinaten(scherm)
+    globale_variabelen.huidige_positie.teken_positie(scherm)
+    # teken als laatst de stukopties
+    if globale_variabelen.geselecteerdeStuk != None:
+        #krijg stuk opties
+        stuk = globale_variabelen.geselecteerdeStuk
+        positie = globale_variabelen.huidige_positie
+        stuk_opties = stuk.krijg_beweegopties_in_positie(positie)
+        bord.TekenStukOpties(stuk_opties, scherm)
 
 def IsPakActie(stuk : Stuk):
     positie = globale_variabelen.huidige_positie
@@ -40,8 +85,6 @@ def Selecteer(stuk):
         #selectie toegestaan
         #wijs het stuk aan als het geselecteerde stuk
         globale_variabelen.geselecteerdeStuk = stuk
-        globale_variabelen.geselecteerdeStukOpties = stuk.krijg_beweegopties_in_positie(globale_variabelen.huidige_positie)
-        globale_variabelen.moet_bord_bijgewerkt_worden = True
     else:
         #we mogen dit stuk niet selecteren. Behandel als deselectie-actie
         DeSelecteer()
@@ -58,39 +101,7 @@ def BehandelGameOver():
     pygame.quit()
 
 def DoeEenWillekeurigeZet(speler):
-    positie = globale_variabelen.huidige_positie
-    stukken = positie.krijg_alle_stukken_van_speler(speler)
-    # kies een willekeurig stuk, dat minstens 1 zet ter beschikking heeft
-    # gebruik een while loop die doorgaat tot er een stuk is gevonden dat aan de vereisten voldoet
-    stukMetGeldigeZetGevonden = False
-    while not stukMetGeldigeZetGevonden:
-        if len(stukken) == 0:
-            BehandelGameOver()
-            return
-        if not stukken:
-            BehandelGameOver()
-            return
-        # nog geen stuk met geldige zet gevonden. kies een random stuk
-        stuk = random.choice(stukken)
-        stukken.remove(stuk)
-        # krijg de opties van het stuk
-        opties = stuk.krijg_beweegopties_in_positie(positie)
-        # als het stuk opties heeft, is er een geldig stuk gevonden
-        if len(opties) > 0:
-            #stuk met geldige zet gevonden, stap uit loop
-            break
-    #kies een willekeurige zet uit de opties van het stuk
-    gekozenCoord = random.choice(opties)
-    # check of de gekozen optie een gewone verplaatsing of een pakactie is
-    staatErEenStukOpHetVeld = positie.staat_er_een_stuk_op_dit_veld(gekozenCoord)
-    if staatErEenStukOpHetVeld:
-        #het betreft een pakactie
-        positie.pak_op_veld(stuk, gekozenCoord)
-    else:
-        #het betreft geen pakactie
-        #verplaats het stuk naar het gekozen veld
-        stuk_huidig_veld = positie.krijg_veld_van_stuk(stuk)
-        positie.verplaats_stuk(stuk, stuk_huidig_veld, gekozenCoord)
+    AI().doe_random_geldige_zet(speler)
 
 def BehandelSpelerAanZetVeranderd():
     huidigeSpeler = globale_variabelen.huidige_positie.speler_aan_zet
@@ -127,8 +138,7 @@ def BehandelVeldGeselecteerd(veld : GetekendVeld):
             geselecteerde_stuk = globale_variabelen.geselecteerdeStuk
             huidig_veld = positie.krijg_veld_van_stuk(geselecteerde_stuk)
             nieuw_veld = veld.coordinaat
-            nieuwe_positie = Zet(positie, huidig_veld, nieuw_veld).doe_zet()
-            globale_variabelen.huidige_positie = nieuwe_positie
+            Zet(positie, huidig_veld, nieuw_veld).doe_zet()
         elif WasErEenStukGeselecteerd():
             # er is een veld aangeklikt dat niet tot de mogelijkheden van het geselecteerde stuk behoort
             # de-selecteer het stuk

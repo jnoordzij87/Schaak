@@ -1,8 +1,4 @@
-from stukken.stuk import Stuk
-import globale_variabelen
 from zet.zet import Zet
-from positie.hypothetische_positie import HypothetischePositie
-import copy
 
 
 class Beweging:
@@ -10,21 +6,14 @@ class Beweging:
         pass
 
     def krijg_beweegopties_in_positie(self, stuk, positie):
-        if self.is_stuk_gepind(stuk, positie):
-            return [] #geen opties
-        else:
-            return self.krijg_zicht_in_positie(stuk, positie)
-
-    def is_stuk_gepind(self, stuk, positie):
-        hypo_positie = copy.deepcopy(positie)
-        stuk_veld = positie.krijg_veld_van_stuk(stuk)
-        hypo_positie.verwijder_stuk_op_veld(stuk_veld)
-        is_positie_geldig = hypo_positie.is_positie_geldig()
-        if is_positie_geldig:
-            is_stuk_gepind = False
-        else:
-            is_stuk_gepind = True
-        return is_stuk_gepind
+        beweegopties = self.krijg_zicht_in_positie(stuk, positie)
+        geldige_opties = []
+        for doelveld in beweegopties:
+            huidigveld = positie.krijg_veld_van_stuk(stuk)
+            is_optie_geldig = Zet(positie, huidigveld, doelveld).is_zet_geldig()
+            if is_optie_geldig:
+                geldige_opties.append(doelveld)
+        return geldige_opties
 
     def krijg_zicht_in_positie(self, stuk, positie):
         # wordt overschreven per ervend stuk
@@ -48,7 +37,7 @@ class Beweging:
         bezet_door_eigen_stuk = self._staat_er_een_stuk_van_zelfde_kleur_op_veld(stuk, coordinaat, positie)
         return bezet_door_eigen_stuk
 
-    #haal dit weg en schrijf duidelijkere is veld bezet functie
+    #TODO: haal dit weg en schrijf duidelijkere is veld bezet functie
     def _staat_er_een_stuk_van_andere_kleur_op_veld(self, stuk, veld, positie):
         staat_stuk_op_veld = positie.staat_er_een_stuk_op_dit_veld(veld)
         if not staat_stuk_op_veld:
@@ -58,6 +47,7 @@ class Beweging:
             andere_kleur = stuk_op_veld.kleur != stuk.kleur
             return andere_kleur
 
+    # TODO: haal dit weg en schrijf duidelijkere is veld bezet functie
     def _staat_er_een_stuk_van_zelfde_kleur_op_veld(self, stuk, veld, positie):
         staat_stuk_op_veld = positie.staat_er_een_stuk_op_dit_veld(veld)
         if not staat_stuk_op_veld:
