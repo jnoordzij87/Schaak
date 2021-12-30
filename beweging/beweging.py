@@ -10,7 +10,7 @@ class Beweging:
         geldige_opties = []
         for doelveld in beweegopties:
             huidigveld = positie.krijg_veld_van_stuk(stuk)
-            is_optie_geldig = Zet(positie, huidigveld, doelveld).is_zet_geldig()
+            is_optie_geldig = Zet(stuk, doelveld, positie).is_zet_geldig()
             if is_optie_geldig:
                 geldige_opties.append(doelveld)
         return geldige_opties

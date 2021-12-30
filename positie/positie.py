@@ -8,21 +8,6 @@ import globale_variabelen
 import pygame
 
 class Positie:
-    """
-    In een positie beoog ik het volgende:
-    -composiet met component bord
-    -toegang tot verzameling van velden (via bord)
-    -toegang tot verzameling van alle actieve stukken
-    -voor elk veld: weten welk stuk er op staat
-    -voor elk stuk: weten op welk veld het staat
-    -verkrijgen van stuk bewegingsmogelijkheden -> verplaatst naar beweging
-    -stukken en velden beoog ik hiermee onafhankelijk van elkaar te maken
-    -wie is er aan zet
-    -evaluatie of een positie geldig is of niet (mag een zet uitgevoerd worden)
-    -is een positie schaak
-    -is een positie schaakmat
-    -positie mag input zijn voor updatebord(positie) / tekenbord(huidigepositie) (buiten deze class)
-    """
     def __init__(self, bord : Bord):
         self._bord = bord
         self._actieve_stukken = [] #lijst wordt gevuld bij initialiseren startpositie
@@ -30,6 +15,7 @@ class Positie:
         self._speler_aan_zet = None
         self.staat_speler_aan_zet_schaak = False
 
+    #TODO: haal bord weg uit positie class. vind t toch onlogisch
     @property
     def bord(self):
         return self._bord
@@ -73,46 +59,6 @@ class Positie:
             if stuk.stuktype == StukType.Koning:
                 koning_coord = self.krijg_veld_van_stuk(stuk)
                 return koning_coord
-
-    def pak_op_veld(self, pakkendestuk : Stuk, veld : str):
-        gepakte_stuk = self.krijg_stuk_op_veld(veld)
-        self.pak_stuk(pakkendestuk, gepakte_stuk)
-
-    def pak_stuk(self, pakkendestuk : Stuk, gepaktestuk : Stuk):
-        # Verwijder het gepaktestuk van de lijst met actieve stukken
-        self.actieve_stukken.remove(gepaktestuk)
-        # Verplaats het pakkende stuk naar het nieuwe veld
-        pakkend_stuk_huidig_veld = self.krijg_veld_van_stuk(pakkendestuk)
-        pakkend_stuk_nieuw_veld = self.krijg_veld_van_stuk(gepaktestuk)
-        self.verplaats_stuk(pakkendestuk, pakkend_stuk_huidig_veld, pakkend_stuk_nieuw_veld)
-        globale_variabelen.moet_bord_bijgewerkt_worden = True
-
-    def verwijder_stuk_op_veld(self, coordinaat):
-        self.veldbezetting[coordinaat] = None
-
-    def verplaats_hypothetisch(self, stuk : Stuk, oudeveld : str, nieuweveld : str):
-        # update veldbezetting
-        self.veldbezetting[oudeveld] = None
-        self.veldbezetting[nieuweveld] = stuk
-        # reset globale variabelen:
-        globale_variabelen.geselecteerdeStuk = None
-        globale_variabelen.geselecteerdeStukOpties = None
-        globale_variabelen.moet_bord_bijgewerkt_worden = True
-        # registreer stuk bewogen
-        stuk.heeft_al_eens_bewogen = True
-
-    def verplaats_stuk(self, stuk : Stuk, oudeveld : str, nieuweveld : str):
-        #update veldbezetting
-        self.veldbezetting[oudeveld] = None
-        self.veldbezetting[nieuweveld] = stuk
-        #reset globale variabelen:
-        globale_variabelen.geselecteerdeStuk = None
-        globale_variabelen.geselecteerdeStukOpties = None
-        globale_variabelen.moet_bord_bijgewerkt_worden = True
-        #registreer stuk bewogen
-        stuk.heeft_al_eens_bewogen = True
-        # na het verplaatsen van een stuk is de andere speler aan de beurt
-        self.verander_speler_aan_zet()
 
     def krijg_alle_stukken_van_speler(self, speler : Spelers):
         stukkenVanSpeler = []  #start lege lijst

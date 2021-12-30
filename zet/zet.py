@@ -3,10 +3,11 @@ from globale_enums import StukType
 import copy
 
 class Zet():
-    def __init__(self, positie, oud_veld, nieuw_veld):
-        self.echte_positie = positie
-        self.oud_veld = oud_veld
+    def __init__(self, stuk, nieuw_veld, positie):
+        self.stuk = stuk
+        self.oud_veld = positie.krijg_veld_van_stuk(stuk)
         self.nieuw_veld = nieuw_veld
+        self.echte_positie = positie
 
     def doe_zet(self):
         self.doe_zet_in_positie(self.echte_positie)
@@ -22,10 +23,19 @@ class Zet():
         return koning_coord in zicht_verplaatste_stuk
 
     def is_zet_geldig(self):
+        #controleer op geldige stukbeweging
+        if self.is_stuk_beweging_geldig() == False:
+            return False
+        #controleer in hypothetisch uitgevoerde positie op schaak
         hypothetische_positie = copy.deepcopy(self.echte_positie)
         self.doe_zet_in_positie(hypothetische_positie)
         is_zet_geldig = self.is_positie_geldig(hypothetische_positie)
         return is_zet_geldig
+
+    def is_stuk_beweging_geldig(self):
+        stuk_opties = self.stuk.krijg_zicht_in_positie(self.echte_positie)
+        is_beweging_geldig = self.nieuw_veld in stuk_opties
+        return is_beweging_geldig
 
     def doe_zet_in_positie(self, positie):
         if self.is_pakactie(positie):

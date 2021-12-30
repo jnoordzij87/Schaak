@@ -27,7 +27,7 @@ class KoningBeweging(LineaireBeweging):
         zichtvelden = self.krijg_zicht_in_positie(stuk, positie)
         huidig_veld = positie.krijg_veld_van_stuk(stuk)
         for zichtveld in zichtvelden:
-            if Zet(positie, huidig_veld, zichtveld).is_zet_geldig():
+            if Zet(stuk, zichtveld, positie).is_zet_geldig():
                 beweegopties.append(zichtveld)
             #hypo_positie = copy.deepcopy(positie)
             #hypo_positie_koning = hypo_positie.veldbezetting[huidig_veld] #is door deepcopy niet hetzelfde object

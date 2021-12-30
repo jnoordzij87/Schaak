@@ -17,7 +17,7 @@ while houdspeldraaiend == True:
     #aan het begin van de loop is het bord up to date
     moet_bord_geupdate_worden = False
     #controleer muisklikgebeurtenissen
-    houdspeldraaiend = hulpfuncties.CheckMuisKlikGebeurtenissen()
+    houdspeldraaiend = hulpfuncties.CheckPygameGebeurtenissen()
     if globale_variabelen.schaakmat == True:
         continue
 
