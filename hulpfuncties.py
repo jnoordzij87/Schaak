@@ -9,6 +9,15 @@ from zet.zet import Zet
 from ai.ai import AI
 from bord.bord import Bord
 from positie.startpositie import StartPositie
+from playsound import playsound
+import os
+
+def BehandelGameOver():
+    globale_variabelen.schaakmat = True
+
+def BehandelSchaakmat():
+    abspath = os.path.abspath('geluiden/Tada-sound.mp3')
+    playsound(abspath)
 
 def InitialiseerBord(scherm, schermbreedte, schermhoogte):
     # maak het bord
@@ -97,8 +106,7 @@ def DeSelecteer():
 def WasErEenStukGeselecteerd():
     return globale_variabelen.geselecteerdeStuk != None
 
-def BehandelGameOver():
-    pygame.quit()
+
 
 def DoeEenWillekeurigeZet(speler):
     AI().doe_random_geldige_zet(speler)
@@ -151,6 +159,11 @@ def BehandelKlikGebeurtenis(event):
     """
     Deze functie doet alles wat er moet gebeuren als de gebruiker ergens heeft geklikt
     """
+
+    if globale_variabelen.schaakmat == True:
+        #bij een klikgebeurtenis na schaakmat: sluit spel af
+        pygame.quit()
+
     #kijk waar op het scherm er is geklikt
     klikX, klikY = event.pos
     #vind uit welk veld is aangeklikt

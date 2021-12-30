@@ -35,6 +35,9 @@ while houdspeldraaiend == True:
     #update het scherm
     pygame.display.flip()
 
+    if globale_variabelen.schaakmat == True:
+        hulpfuncties.BehandelSchaakmat()
+
 #we komen hier als we uit de game-loop zijn
 pygame.quit()
 
