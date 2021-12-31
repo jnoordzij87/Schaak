@@ -1,22 +1,15 @@
 from stukken.stuk import Stuk
-from globale_enums import Richtingen, StukType
-import globale_variabelen
+from globale_enums import StukType
+from beweging.loperbeweging import LoperBeweging
+from plaatjes.opzoeker import plaatjesOpzoeker
 
 class Loper(Stuk):
-    def __init__(self, kleur, veld):
-        #geef de stukinformatie door aan de moederclass
-        super().__init__(StukType.Loper, kleur, veld)
-        self.Plaatje = globale_variabelen.plaatjes[self.StukType][self.Kleur]
-        self.StelBeweegRichtingenIn()
+    def __init__(self, kleur):
+        super().__init__(StukType.Loper, kleur)
+        self._plaatje = plaatjesOpzoeker[self.stuktype][self.kleur]
 
-    def StelBeweegRichtingenIn(self):
-        self.BeweegRichtingen = [Richtingen.RechtsOnder,
-                                 Richtingen.RechtsBoven,
-                                 Richtingen.LinksBoven,
-                                 Richtingen.LinksOnder]
+    def krijg_beweegopties_in_positie(self, positie):
+        return LoperBeweging().krijg_beweegopties_in_positie(self, positie)
 
-    def KrijgVeldenWaarStukNaarToeKan(self):
-        resultaat = []
-        for beweegrichting in self.BeweegRichtingen:
-            resultaat.extend(self.AlleVakjesInRichting(self.HuidigVeld.Coordinaat(), beweegrichting))
-        return resultaat
+    def krijg_zicht_in_positie(self, positie):
+        return LoperBeweging().krijg_zicht_in_positie(self, positie)
